@@ -18,7 +18,7 @@ data class OpenAiStreamResponse(
     @SerialName("service_tier")
     val serviceTier: String,
     @SerialName("system_fingerprint")
-    val systemFingerprint: String,
+    val systemFingerprint: String?,
     @SerialName("usage")
-    val usage: Usage,
+    val usage: Usage? = null,
 )

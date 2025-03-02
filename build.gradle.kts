@@ -3,3 +3,8 @@ plugins {
     alias(libs.plugins.androidLibrary).apply(false)
     alias(libs.plugins.kotlinMultiplatform).apply(false)
 }
+
+allprojects {
+    group = "pl.matiz22.chatml"
+    version = "0.0.1"
+}

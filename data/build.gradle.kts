@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinSerialization)
+    `maven-publish`
 }
 
 kotlin {
@@ -55,6 +56,38 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlin.envvar)
             implementation(libs.kotlinx.coroutines.test)
+        }
+    }
+    publishing {
+        publications {
+            withType<MavenPublication> {
+                artifactId =
+                    if (name == "kotlinMultiplatform") {
+                        "data"
+                    } else {
+                        "data-$name"
+                    }
+                pom {
+                    name.set("ChatML")
+                    description.set("ChatML Kotlin Multiplatform Library")
+                }
+            }
+        }
+
+        repositories {
+            google()
+            mavenCentral()
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/matiz22/ChatML")
+                credentials {
+                    username = System.getenv("GitHubPackagesUsername")
+                    password = System.getenv("GitHubPackagesPassword")
+                }
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
         }
     }
 }

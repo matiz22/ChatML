@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Choice(
+internal data class OpenAiChoice(
     @SerialName("finish_reason")
     val finishReason: String,
     @SerialName("index")
     val index: Int,
     @SerialName("logprobs")
-    val logprobs: Logprobs?,
+    val logprobs: OpenAiLogprobs?,
     @SerialName("message")
-    val responseMessage: ResponseMessage,
+    val responseMessage: OpenAiResponseMessage,
 )

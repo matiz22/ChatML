@@ -7,7 +7,7 @@ import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
 @Serializable
-data class AnthropicMessageDelta(
+internal data class AnthropicMessageDelta(
     val type: String,
     val delta: AnthropicDelta,
     val usage: AnthropicUsage = AnthropicUsage(),

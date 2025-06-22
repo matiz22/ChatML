@@ -18,14 +18,14 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
-import pl.matiz22.chatml.data.models.openai.Choice
-import pl.matiz22.chatml.data.models.openai.ImageUrl
+import pl.matiz22.chatml.data.models.openai.OpenAiChoice
+import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
 import pl.matiz22.chatml.data.models.openai.OpenAiRequest
+import pl.matiz22.chatml.data.models.openai.OpenAiRequestContent
+import pl.matiz22.chatml.data.models.openai.OpenAiRequestMessage
 import pl.matiz22.chatml.data.models.openai.OpenAiResponse
+import pl.matiz22.chatml.data.models.openai.OpenAiStreamChoice
 import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
-import pl.matiz22.chatml.data.models.openai.RequestContent
-import pl.matiz22.chatml.data.models.openai.RequestMessage
-import pl.matiz22.chatml.data.models.openai.StreamChoice
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
@@ -94,14 +94,14 @@ class OpenAiRepository(
             maxTokens = options.maxTokens,
         )
 
-    private fun Message.fromDomain(): RequestMessage =
-        RequestMessage(
+    private fun Message.fromDomain(): OpenAiRequestMessage =
+        OpenAiRequestMessage(
             content =
                 listOf(
-                    RequestContent(
+                    OpenAiRequestContent(
                         imageUrl =
                             when (val content = this.content) {
-                                is Content.Image -> ImageUrl(url = content.url)
+                                is Content.Image -> OpenAiImageUrl(url = content.url)
                                 else -> null
                             },
                         type =
@@ -137,7 +137,7 @@ class OpenAiRepository(
         )
 
     @JvmName("toMessagesFromStreamChoices")
-    private fun List<StreamChoice>.toMessages(): List<Message> =
+    private fun List<OpenAiStreamChoice>.toMessages(): List<Message> =
         this.map { streamChoice ->
             Message(
                 role = Role.ASSISTANT,
@@ -145,7 +145,7 @@ class OpenAiRepository(
             )
         }
 
-    private fun List<Choice>.toMessages(): List<Message> =
+    private fun List<OpenAiChoice>.toMessages(): List<Message> =
         this.map { choice ->
             Message(
                 role = Role.valueOf(choice.responseMessage.role.uppercase()),

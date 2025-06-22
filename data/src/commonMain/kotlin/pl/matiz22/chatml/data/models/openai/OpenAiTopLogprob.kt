@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TopLogprob(
+internal data class OpenAiTopLogprob(
     @SerialName("bytes")
     val bytes: List<Int>,
     @SerialName("logprob")

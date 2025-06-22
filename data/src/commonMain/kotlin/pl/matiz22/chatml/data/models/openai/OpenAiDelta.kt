@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Delta(
+internal data class OpenAiDelta(
     @SerialName("content")
     val content: String? = null,
     @SerialName("refusal")

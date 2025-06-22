@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AnthropicStreamStartMessage(
+internal data class AnthropicStreamStartMessage(
     val id: String,
     val type: String,
     val role: String,

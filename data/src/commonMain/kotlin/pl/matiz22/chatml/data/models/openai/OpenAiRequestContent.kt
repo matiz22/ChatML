@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RequestContent(
+internal data class OpenAiRequestContent(
     @SerialName("image_url")
-    val imageUrl: ImageUrl? = null,
+    val imageUrl: OpenAiImageUrl? = null,
     @SerialName("text")
     val text: String? = null,
     @SerialName("type")

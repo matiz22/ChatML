@@ -4,22 +4,22 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class ToolChoice {
+internal sealed class AnthropicToolChoice {
     @Serializable
     @SerialName("auto")
-    data object Auto : ToolChoice()
+    data object Auto : AnthropicToolChoice()
 
     @Serializable
     @SerialName("any")
-    data object Any : ToolChoice()
+    data object Any : AnthropicToolChoice()
 
     @Serializable
     @SerialName("tool")
     data class SpecificTool(
         val name: String,
-    ) : ToolChoice()
+    ) : AnthropicToolChoice()
 
     @Serializable
     @SerialName("none")
-    data object None : ToolChoice()
+    data object None : AnthropicToolChoice()
 }

@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StreamChoice(
+internal data class OpenAiStreamChoice(
     @SerialName("delta")
-    val delta: Delta,
+    val delta: OpenAiDelta,
     @SerialName("finish_reason")
     val finishReason: String? = null,
     @SerialName("index")
     val index: Int,
     @SerialName("logprobs")
-    val logprobs: Logprobs? = null,
+    val logprobs: OpenAiLogprobs? = null,
 )

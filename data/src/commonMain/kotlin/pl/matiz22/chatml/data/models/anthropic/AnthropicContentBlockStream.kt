@@ -6,7 +6,7 @@ import kotlinx.serialization.json.JsonNames
 import pl.matiz22.chatml.domain.models.ChatResponse
 
 @Serializable
-data class AnthropicContentBlockStream
+internal data class AnthropicContentBlockStream
     @OptIn(ExperimentalSerializationApi::class)
     constructor(
         val type: String,

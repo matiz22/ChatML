@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import pl.matiz22.chatml.domain.models.ChatResponse
 
 @Serializable
-data class AnthropicResponse(
+internal data class AnthropicResponse(
     val id: String,
     val model: String,
     val role: String,

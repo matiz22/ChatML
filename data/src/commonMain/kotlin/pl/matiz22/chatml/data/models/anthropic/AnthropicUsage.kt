@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import pl.matiz22.chatml.domain.models.Tokens
 
 @Serializable
-data class AnthropicUsage(
+internal data class AnthropicUsage(
     @SerialName("input_tokens")
     val inputTokens: Int = 0,
     @SerialName("output_tokens")

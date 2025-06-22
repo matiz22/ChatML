@@ -14,6 +14,8 @@ data class AnthropicUsage(
     val cacheCreationInputTokens: Int = 0,
     @SerialName("cache_read_input_tokens")
     val cacheReadInputTokens: Int = 0,
+    @SerialName("service_tier")
+    val serviceTier: String? = null,
 ) {
     fun toDomain(): Tokens =
         Tokens(

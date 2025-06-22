@@ -38,37 +38,6 @@ kotlin {
             implementation(libs.kotlin.test)
         }
     }
-    publishing {
-        publications {
-            withType<MavenPublication> {
-                artifactId =
-                    if (name == "kotlinMultiplatform") {
-                        "domain"
-                    } else {
-                        "domain-$name"
-                    }
-                pom {
-                    name.set("ChatML")
-                    description.set("ChatML Kotlin Multiplatform Library")
-                }
-            }
-        }
-        repositories {
-            google()
-            mavenCentral()
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/matiz22/ChatML")
-                credentials {
-                    username = System.getenv("GitHubPackagesUsername")
-                    password = System.getenv("GitHubPackagesPassword")
-                }
-                authentication {
-                    create<BasicAuthentication>("basic")
-                }
-            }
-        }
-    }
 }
 
 android {
@@ -80,5 +49,31 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+publishing {
+    publications {
+        withType<MavenPublication> {
+            pom {
+                name.set("ChatML")
+                description.set("ChatML Kotlin Multiplatform Library")
+            }
+        }
+    }
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/matiz22/ChatML")
+            credentials {
+                username = System.getenv("GitHubPackagesUsername")
+                password = System.getenv("GitHubPackagesPassword")
+            }
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
     }
 }

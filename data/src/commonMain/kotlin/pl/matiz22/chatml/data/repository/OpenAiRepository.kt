@@ -5,15 +5,16 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.sse.SSE
+import io.ktor.client.plugins.sse.sseSession
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsChannel
+import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.utils.io.readUTF8Line
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
@@ -47,33 +48,32 @@ class OpenAiRepository(
         options: CompletionOptions,
     ): Flow<ChatResponse> =
         flow {
-            val response =
-                client.post("chat/completions") {
-                    setBody(prepareRequestBody(model, messages, options))
-                }
+            val requestBody = prepareRequestBody(model, messages, options)
 
             if (options.stream) {
-                val channel = response.bodyAsChannel()
-
-                while (!channel.isClosedForRead) {
-                    val line = channel.readUTF8Line() ?: continue
-
-                    if (line.isEmpty()) {
-                        continue
+                val session =
+                    client.sseSession("chat/completions") {
+                        method = HttpMethod.Post
+                        setBody(requestBody)
                     }
 
-                    if (line.startsWith("data: ")) {
-                        val content = line.removePrefix("data: ").trim()
-
-                        if (content == "[DONE]" || content.isBlank()) {
-                            break
-                        }
-                        val streamResponse = Json.decodeFromString<OpenAiStreamResponse>(content)
-                        val chatResponse = streamResponse.toMessages()
-                        emit(chatResponse)
+                session.incoming.collect { event ->
+                    if (event.data == "[DONE]" || event.data.isNullOrBlank()) {
+                        return@collect
                     }
+
+                    val streamResponse =
+                        Json.decodeFromString<OpenAiStreamResponse>(
+                            event.data ?: throw Exception("Error while handling stream: null data"),
+                        )
+                    val chatResponse = streamResponse.toMessages()
+                    emit(chatResponse)
                 }
             } else {
+                val response =
+                    client.post("chat/completions") {
+                        setBody(requestBody)
+                    }
                 val openAiResponse: OpenAiResponse = response.body()
                 emit(openAiResponse.toMessages())
             }
@@ -168,6 +168,7 @@ class OpenAiRepository(
                 install(HttpTimeout) {
                     requestTimeoutMillis = 30000
                 }
+                install(SSE)
                 defaultRequest {
                     contentType(io.ktor.http.ContentType.Application.Json)
                     url {

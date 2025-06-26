@@ -26,6 +26,7 @@ class OpenAiRepositoryIntegrationTest {
     @Test
     fun testCompletionWithTextMessage() =
         runTest {
+            println("Running testCompletionWithTextMessage")
             // Given
             val model = "gpt-4.1-nano"
             val messages =
@@ -53,6 +54,7 @@ class OpenAiRepositoryIntegrationTest {
 
             val responseText = (result.response[0].content as Content.Text).text
             assertNotNull(responseText)
+            println(responseText)
             // Response should mention Paris
             assertTrue(responseText.contains("Paris", ignoreCase = true))
 
@@ -64,6 +66,7 @@ class OpenAiRepositoryIntegrationTest {
     @Test
     fun testCompletionWithImageMessage() =
         runTest {
+            println("Running testCompletionWithImageMessage")
             val model = "gpt-4.1-nano"
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Paris_vue_d%27ensemble_tour_Eiffel.jpg/1280px-Paris_vue_d%27ensemble_tour_Eiffel.jpg"
@@ -96,6 +99,7 @@ class OpenAiRepositoryIntegrationTest {
 
             val responseText = (result.response[0].content as Content.Text).text
             assertNotNull(responseText)
+            println(responseText)
             // Response should mention the Eiffel Tower
             assertTrue(responseText.contains("Eiffel", ignoreCase = true))
 
@@ -108,6 +112,7 @@ class OpenAiRepositoryIntegrationTest {
     @Test
     fun testCompletionWithSystemMessage() =
         runTest {
+            println("Running testCompletionWithSystemMessage")
             // Given
             val model = "gpt-4.1-nano"
             val messages =
@@ -139,6 +144,7 @@ class OpenAiRepositoryIntegrationTest {
 
             val responseText = (result.response[0].content as Content.Text).text
             assertNotNull(responseText)
+            println(responseText)
             // Response should have some pirate-like language
             assertTrue(
                 responseText.contains("arr", ignoreCase = true) ||
@@ -152,6 +158,7 @@ class OpenAiRepositoryIntegrationTest {
     @Test
     fun testWithMaxTokensLimit() =
         runTest {
+            println("Running testWithMaxTokensLimit")
             // Given
             val model = "gpt-4.1-nano"
             val messages =
@@ -177,7 +184,7 @@ class OpenAiRepositoryIntegrationTest {
 
             val responseText = (result.response[0].content as Content.Text).text
             assertNotNull(responseText)
-
+            println(responseText)
             // The output should be constrained by token limit
             // A full essay would be much longer than 50 tokens
             assertTrue(result.tokens!!.output <= 60) // Allow a small margin over the requested limit
@@ -186,6 +193,7 @@ class OpenAiRepositoryIntegrationTest {
     @Test
     fun testStreamingOption() =
         runTest {
+            println("Running testStreamingOption")
             // Given
             val model = "gpt-4.1-nano"
             val messages =
@@ -205,12 +213,21 @@ class OpenAiRepositoryIntegrationTest {
             val resultFlow = repository.completion(model, messages, options)
             val result = resultFlow.first()
             resultFlow.collect {
-                println(
-                    it.response
-                        .first()
-                        .content
-                        .toString(),
-                )
+                when (
+                    val content =
+                        it.response
+                            .first()
+                            .content
+                ) {
+                    is Content.Image -> {
+                        println(content.url + " is an image URL.")
+                        println(content.type.value + " is the content type.")
+                    }
+
+                    is Content.Text -> {
+                        println("Response text: ${content.text}")
+                    }
+                }
             }
 
             // Then
@@ -221,11 +238,13 @@ class OpenAiRepositoryIntegrationTest {
             // The actual streaming behavior would need to be tested differently
             val responseText = (result.response[0].content as Content.Text).text
             assertNotNull(responseText)
+            println(responseText)
         }
 
     @Test
     fun testCompletionWithBase64Image() =
         runTest {
+            println("Running testCompletionWithBase64Image")
             // Given
             val model = "gpt-4.1-nano"
             val base64Image =

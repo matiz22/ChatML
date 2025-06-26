@@ -11,8 +11,6 @@ import io.ktor.client.plugins.sse.sseSession
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
@@ -65,7 +63,6 @@ class AnthropicRepository(
                         setBody(body)
                         method = HttpMethod.Post
                     }
-                println(session)
 
                 session.incoming.collect { event ->
                     when (event.event) {
@@ -104,7 +101,6 @@ class AnthropicRepository(
                     httpClient.post("messages") {
                         setBody(body)
                     }
-                println(response.bodyAsText())
                 emit(response.body<AnthropicResponse>().toDomain())
             }
         }.catch { exception ->

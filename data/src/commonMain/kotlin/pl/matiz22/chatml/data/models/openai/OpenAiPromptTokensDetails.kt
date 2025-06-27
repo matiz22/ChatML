@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PromptTokensDetails(
+internal data class OpenAiPromptTokensDetails(
     @SerialName("audio_tokens")
     val audioTokens: Int,
     @SerialName("cached_tokens")

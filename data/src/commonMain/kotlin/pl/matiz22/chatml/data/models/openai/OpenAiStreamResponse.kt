@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OpenAiStreamResponse(
+internal data class OpenAiStreamResponse(
     @SerialName("choices")
-    val choices: List<StreamChoice>,
+    val choices: List<OpenAiStreamChoice>,
     @SerialName("created")
     val created: Int,
     @SerialName("id")
@@ -20,5 +20,5 @@ data class OpenAiStreamResponse(
     @SerialName("system_fingerprint")
     val systemFingerprint: String?,
     @SerialName("usage")
-    val usage: Usage? = null,
+    val usage: OpenAiUsage? = null,
 )

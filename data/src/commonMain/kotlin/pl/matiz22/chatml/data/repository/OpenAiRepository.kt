@@ -5,26 +5,27 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.sse.SSE
+import io.ktor.client.plugins.sse.sseSession
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsChannel
+import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.utils.io.readUTF8Line
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
-import pl.matiz22.chatml.data.models.openai.Choice
-import pl.matiz22.chatml.data.models.openai.ImageUrl
+import pl.matiz22.chatml.data.models.openai.OpenAiChoice
+import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
 import pl.matiz22.chatml.data.models.openai.OpenAiRequest
+import pl.matiz22.chatml.data.models.openai.OpenAiRequestContent
+import pl.matiz22.chatml.data.models.openai.OpenAiRequestMessage
 import pl.matiz22.chatml.data.models.openai.OpenAiResponse
+import pl.matiz22.chatml.data.models.openai.OpenAiStreamChoice
 import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
-import pl.matiz22.chatml.data.models.openai.RequestContent
-import pl.matiz22.chatml.data.models.openai.RequestMessage
-import pl.matiz22.chatml.data.models.openai.StreamChoice
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
@@ -47,33 +48,32 @@ class OpenAiRepository(
         options: CompletionOptions,
     ): Flow<ChatResponse> =
         flow {
-            val response =
-                client.post("chat/completions") {
-                    setBody(prepareRequestBody(model, messages, options))
-                }
+            val requestBody = prepareRequestBody(model, messages, options)
 
             if (options.stream) {
-                val channel = response.bodyAsChannel()
-
-                while (!channel.isClosedForRead) {
-                    val line = channel.readUTF8Line() ?: continue
-
-                    if (line.isEmpty()) {
-                        continue
+                val session =
+                    client.sseSession("chat/completions") {
+                        method = HttpMethod.Post
+                        setBody(requestBody)
                     }
 
-                    if (line.startsWith("data: ")) {
-                        val content = line.removePrefix("data: ").trim()
-
-                        if (content == "[DONE]" || content.isBlank()) {
-                            break
-                        }
-                        val streamResponse = Json.decodeFromString<OpenAiStreamResponse>(content)
-                        val chatResponse = streamResponse.toMessages()
-                        emit(chatResponse)
+                session.incoming.collect { event ->
+                    if (event.data == "[DONE]" || event.data.isNullOrBlank()) {
+                        return@collect
                     }
+
+                    val streamResponse =
+                        Json.decodeFromString<OpenAiStreamResponse>(
+                            event.data ?: throw Exception("Error while handling stream: null data"),
+                        )
+                    val chatResponse = streamResponse.toMessages()
+                    emit(chatResponse)
                 }
             } else {
+                val response =
+                    client.post("chat/completions") {
+                        setBody(requestBody)
+                    }
                 val openAiResponse: OpenAiResponse = response.body()
                 emit(openAiResponse.toMessages())
             }
@@ -94,14 +94,14 @@ class OpenAiRepository(
             maxTokens = options.maxTokens,
         )
 
-    private fun Message.fromDomain(): RequestMessage =
-        RequestMessage(
+    private fun Message.fromDomain(): OpenAiRequestMessage =
+        OpenAiRequestMessage(
             content =
                 listOf(
-                    RequestContent(
+                    OpenAiRequestContent(
                         imageUrl =
                             when (val content = this.content) {
-                                is Content.Image -> ImageUrl(url = content.url)
+                                is Content.Image -> OpenAiImageUrl(url = content.url)
                                 else -> null
                             },
                         type =
@@ -137,7 +137,7 @@ class OpenAiRepository(
         )
 
     @JvmName("toMessagesFromStreamChoices")
-    private fun List<StreamChoice>.toMessages(): List<Message> =
+    private fun List<OpenAiStreamChoice>.toMessages(): List<Message> =
         this.map { streamChoice ->
             Message(
                 role = Role.ASSISTANT,
@@ -145,7 +145,7 @@ class OpenAiRepository(
             )
         }
 
-    private fun List<Choice>.toMessages(): List<Message> =
+    private fun List<OpenAiChoice>.toMessages(): List<Message> =
         this.map { choice ->
             Message(
                 role = Role.valueOf(choice.responseMessage.role.uppercase()),
@@ -168,6 +168,7 @@ class OpenAiRepository(
                 install(HttpTimeout) {
                     requestTimeoutMillis = 30000
                 }
+                install(SSE)
                 defaultRequest {
                     contentType(io.ktor.http.ContentType.Application.Json)
                     url {

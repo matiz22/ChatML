@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Logprobs(
+internal data class OpenAiLogprobs(
     @SerialName("content")
-    val content: List<Content>,
+    val content: List<OpenAiContent>,
 )

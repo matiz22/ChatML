@@ -4,15 +4,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Usage(
+internal data class OpenAiUsage(
     @SerialName("completion_tokens")
     val completionTokens: Int,
     @SerialName("completion_tokens_details")
-    val completionTokensDetails: CompletionTokensDetails,
+    val completionTokensDetails: OpenAiCompletionTokensDetails,
     @SerialName("prompt_tokens")
     val promptTokens: Int,
     @SerialName("prompt_tokens_details")
-    val promptTokensDetails: PromptTokensDetails? = null,
+    val promptTokensDetails: OpenAiPromptTokensDetails? = null,
     @SerialName("total_tokens")
     val totalTokens: Int,
 )

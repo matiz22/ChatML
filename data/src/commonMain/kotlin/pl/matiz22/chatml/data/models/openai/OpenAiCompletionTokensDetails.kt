@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CompletionTokensDetails(
+internal data class OpenAiCompletionTokensDetails(
     @SerialName("accepted_prediction_tokens")
     val acceptedPredictionTokens: Int,
     @SerialName("audio_tokens")

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Tool(
+internal sealed class AnthropicTool(
     val name: String,
     val description: String? = null,
     @SerialName("input_schema")

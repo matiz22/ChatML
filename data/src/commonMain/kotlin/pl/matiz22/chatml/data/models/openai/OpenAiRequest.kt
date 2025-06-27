@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OpenAiRequest(
+internal data class OpenAiRequest(
     @SerialName("messages")
-    val messages: List<RequestMessage>,
+    val messages: List<OpenAiRequestMessage>,
     @SerialName("model")
     val model: String,
     @SerialName("n")

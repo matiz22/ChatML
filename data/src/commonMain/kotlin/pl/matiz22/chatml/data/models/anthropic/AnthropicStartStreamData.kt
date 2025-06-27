@@ -7,7 +7,7 @@ import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
 @Serializable
-data class AnthropicStartStreamData(
+internal data class AnthropicStartStreamData(
     val type: String,
     val message: AnthropicStreamStartMessage,
 ) {

@@ -9,7 +9,7 @@ import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
 @Serializable
-data class AnthropicContent(
+internal data class AnthropicContent(
     val type: String,
     val text: String? = null,
     val source: Source? = null,

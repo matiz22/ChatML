@@ -17,4 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "ChatML"
 include(":domain")
 include(":data")
-include(":chatml")
+include(":core")

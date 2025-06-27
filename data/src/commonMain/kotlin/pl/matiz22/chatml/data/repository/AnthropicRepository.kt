@@ -11,14 +11,13 @@ import io.ktor.client.plugins.sse.sseSession
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
@@ -29,6 +28,7 @@ import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
 import pl.matiz22.chatml.data.models.anthropic.AnthropicResponse
 import pl.matiz22.chatml.data.models.anthropic.AnthropicStartStreamData
 import pl.matiz22.chatml.data.source.httpClient
+import pl.matiz22.chatml.domain.models.ChatMLException
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
@@ -63,35 +63,34 @@ class AnthropicRepository(
                         setBody(body)
                         method = HttpMethod.Post
                     }
-                println(session)
 
                 session.incoming.collect { event ->
                     when (event.event) {
                         "message_start" -> {
                             val messageStart =
                                 Json.decodeFromString<AnthropicStartStreamData>(
-                                    event.data ?: throw Exception("Error while handling stream"),
+                                    event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(messageStart.toDomain())
                         }
                         "content_block_start" -> {
                             val blockStart =
                                 Json.decodeFromString<AnthropicContentBlockStream>(
-                                    event.data ?: throw Exception("Error while handling stream"),
+                                    event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(blockStart.toDomain())
                         }
                         "content_block_delta" -> {
                             val blockDelta =
                                 Json.decodeFromString<AnthropicContentBlockStream>(
-                                    event.data ?: throw Exception("Error while handling stream"),
+                                    event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(blockDelta.toDomain())
                         }
                         "message_delta" -> {
                             val messageDelta =
                                 Json.decodeFromString<AnthropicMessageDelta>(
-                                    event.data ?: throw Exception("Error while handling stream"),
+                                    event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(messageDelta.toDomain())
                         }
@@ -102,9 +101,12 @@ class AnthropicRepository(
                     httpClient.post("messages") {
                         setBody(body)
                     }
-                println(response.bodyAsText())
                 emit(response.body<AnthropicResponse>().toDomain())
             }
+        }.catch { exception ->
+            throw ChatMLException(
+                "Error during completion: ${exception.message}",
+            )
         }
 
     private fun List<Message>.extractSystemMessage(): String =

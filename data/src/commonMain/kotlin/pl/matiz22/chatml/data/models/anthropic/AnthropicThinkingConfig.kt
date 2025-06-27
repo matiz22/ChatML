@@ -4,7 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MetadataObject(
-    @SerialName("user_id")
-    val userId: String? = null,
+internal data class AnthropicThinkingConfig(
+    @SerialName("budget_tokens")
+    val budgetTokens: Int,
+    val type: String = "enabled",
 )

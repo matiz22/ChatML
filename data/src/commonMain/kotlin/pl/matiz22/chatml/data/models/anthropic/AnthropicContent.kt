@@ -46,11 +46,14 @@ internal data class AnthropicContent(
                 content =
                     Content.Tool(
                         value =
-                            Json.decodeFromString(
-                                serializer,
-                                input.toString(),
-                            ),
-                    ),
+                            try {
+                                Json.decodeFromString(
+                                    serializer,
+                                    input.toString(),
+                                )
+                            } catch (e: Exception) {
+                                Content.Text(this.text ?: "")
+                            },
             )
         } else {
             Message(

@@ -24,7 +24,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import pl.matiz22.chatml.data.models.openai.OpenAiChoice
 import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
 import pl.matiz22.chatml.data.models.openai.OpenAiRequest
@@ -87,12 +86,12 @@ class OpenAiRepository(
         }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun <T> completionJson(
+    override suspend fun <T> completion(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
         serializer: KSerializer<T>,
-    ): Flow<List<T>> =
+    ): Flow<ChatResponse> =
         flow {
             val schemaText =
                 generateSchema(
@@ -123,17 +122,7 @@ class OpenAiRepository(
                 }
             val openAiResponse: OpenAiResponse = response.body()
             val responseChoices =
-                openAiResponse
-                    .toMessages()
-                    .response
-                    .filter { message ->
-                        message.role == Role.ASSISTANT && message.content is Content.Text
-                    }.map { message ->
-                        when (val content = message.content) {
-                            is Content.Text -> Json.decodeFromString(serializer, content.text)
-                            else -> throw IllegalArgumentException("Expected text content")
-                        }
-                    }
+                openAiResponse.toMessages(serializer)
             emit(responseChoices)
         }
 
@@ -149,7 +138,7 @@ class OpenAiRepository(
                     message.fromDomain()
                 },
             model = model,
-            stream = options.stream,
+            stream = if (schema == null) options.stream else false,
             maxTokens = options.maxTokens,
             responseFormat = schema,
         )
@@ -167,7 +156,7 @@ class OpenAiRepository(
                         type =
                             when (this.content) {
                                 is Content.Image -> ContentType.IMAGE_URL.value
-                                is Content.Text -> ContentType.TEXT.value
+                                else -> ContentType.TEXT.value
                             },
                         text =
                             when (val content = this.content) {
@@ -196,6 +185,13 @@ class OpenAiRepository(
             tokens = Tokens(input = usage.promptTokens, output = usage.completionTokens),
         )
 
+    private fun <T> OpenAiResponse.toMessages(serializer: KSerializer<T>): ChatResponse =
+        ChatResponse(
+            id = id,
+            response = this.choices.toMessages(serializer),
+            tokens = Tokens(input = usage.promptTokens, output = usage.completionTokens),
+        )
+
     @JvmName("toMessagesFromStreamChoices")
     private fun List<OpenAiStreamChoice>.toMessages(): List<Message> =
         this.map { streamChoice ->
@@ -211,6 +207,22 @@ class OpenAiRepository(
                 role = Role.valueOf(choice.responseMessage.role.uppercase()),
                 content = Content.Text(text = choice.responseMessage.content),
             )
+        }
+
+    private fun <T> List<OpenAiChoice>.toMessages(serializer: KSerializer<T>): List<Message> =
+        this.map { choice ->
+            try {
+                val content = Json.decodeFromString(serializer, choice.responseMessage.content)
+                Message(
+                    role = Role.valueOf(choice.responseMessage.role.uppercase()),
+                    content = Content.Tool(value = content),
+                )
+            } catch (e: Exception) {
+                Message(
+                    role = Role.valueOf(choice.responseMessage.role.uppercase()),
+                    content = Content.Text(text = choice.responseMessage.content),
+                )
+            }
         }
 
     companion object {

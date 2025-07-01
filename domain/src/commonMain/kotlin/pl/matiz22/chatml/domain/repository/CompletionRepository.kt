@@ -13,10 +13,10 @@ interface CompletionRepository {
         options: CompletionOptions,
     ): Flow<ChatResponse>
 
-    suspend fun <T> completionJson(
+    suspend fun <T> completion(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
         serializer: KSerializer<T>,
-    ): Flow<List<T>>
+    ): Flow<ChatResponse>
 }

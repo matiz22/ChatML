@@ -9,7 +9,7 @@ import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
-import pl.matiz22.chatml.domain.repository.util.completionJson
+import pl.matiz22.chatml.domain.repository.util.completion
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -229,6 +229,10 @@ class OpenAiRepositoryIntegrationTest {
                     is Content.Text -> {
                         println("Response text: ${content.text}")
                     }
+
+                    is Content.Tool<*> -> {
+                        println("Test content: ${content.value}")
+                    }
                 }
             }
 
@@ -306,14 +310,15 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completionJson<Address>(model, messages, options)
+            val resultFlow = repository.completion<Address>(model, messages, options)
             val result = resultFlow.first()
 
             // Then
             assertNotNull(result)
+            val content = result.response.first { it.content is Content.Tool<*> }.content as Content.Tool<Address>
             assertEquals(
                 "Paris",
-                result.first().city,
+                content.value.city,
             )
             println("OpenAiResponse: $result")
         }

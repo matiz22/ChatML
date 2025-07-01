@@ -54,6 +54,7 @@ internal data class AnthropicContent(
                             } catch (e: Exception) {
                                 Content.Text(this.text ?: "")
                             },
+                    ),
             )
         } else {
             Message(

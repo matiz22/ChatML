@@ -1,6 +1,7 @@
 package pl.matiz22.chatml.data.repository
 
 import ImageProcessor
+import com.xemantic.ai.tool.schema.generator.generateSchema
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
@@ -19,6 +20,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContentBlockStream
@@ -27,6 +29,8 @@ import pl.matiz22.chatml.data.models.anthropic.AnthropicMessageDelta
 import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
 import pl.matiz22.chatml.data.models.anthropic.AnthropicResponse
 import pl.matiz22.chatml.data.models.anthropic.AnthropicStartStreamData
+import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
+import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.domain.models.ChatMLException
 import pl.matiz22.chatml.domain.models.ChatResponse
@@ -73,6 +77,7 @@ class AnthropicRepository(
                                 )
                             emit(messageStart.toDomain())
                         }
+
                         "content_block_start" -> {
                             val blockStart =
                                 Json.decodeFromString<AnthropicContentBlockStream>(
@@ -80,6 +85,7 @@ class AnthropicRepository(
                                 )
                             emit(blockStart.toDomain())
                         }
+
                         "content_block_delta" -> {
                             val blockDelta =
                                 Json.decodeFromString<AnthropicContentBlockStream>(
@@ -87,6 +93,7 @@ class AnthropicRepository(
                                 )
                             emit(blockDelta.toDomain())
                         }
+
                         "message_delta" -> {
                             val messageDelta =
                                 Json.decodeFromString<AnthropicMessageDelta>(
@@ -109,6 +116,48 @@ class AnthropicRepository(
             )
         }
 
+    override suspend fun <T> completion(
+        model: String,
+        messages: List<Message>,
+        options: CompletionOptions,
+        serializer: KSerializer<T>,
+    ): Flow<ChatResponse> =
+        flow {
+            val schemaText =
+                generateSchema(
+                    serializer.descriptor,
+                    inlineRefs = true,
+                    additionalProperties = false,
+                ).toString()
+            val parsed = Json.parseToJsonElement(schemaText)
+            val system = messages.extractSystemMessage()
+            val name = "tool"
+            val anthropicTool =
+                AnthropicTool(
+                    name = name,
+                    description = name,
+                    inputSchema = parsed,
+                )
+
+            val body =
+                AnthropicRequest(
+                    model = model,
+                    messages = messages.toAnthropic(),
+                    system = system,
+                    stream = false,
+                    maxTokens = options.maxTokens,
+                    tools = listOf(anthropicTool),
+                    toolChoice = AnthropicToolChoice.SpecificTool(name),
+                )
+
+            val response =
+                httpClient.post("messages") {
+                    setBody(body)
+                }
+            val chatResponse = response.body<AnthropicResponse>().toDomain(serializer)
+            emit(chatResponse)
+        }
+
     private fun List<Message>.extractSystemMessage(): String =
         this
             .filter { message: Message ->
@@ -121,6 +170,10 @@ class AnthropicRepository(
 
                     is Content.Text -> {
                         content.text
+                    }
+
+                    is Content.Tool<*> -> {
+                        throw IllegalArgumentException("Provided messages cannot contain tools in messages")
                     }
                 }
             }
@@ -156,6 +209,10 @@ class AnthropicRepository(
 
             is Content.Text -> {
                 AnthropicContent(type = ContentType.TEXT.value, this.text)
+            }
+
+            is Content.Tool<*> -> {
+                throw IllegalArgumentException("Provided messages cannot contain tools in messages")
             }
         }
 

@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.wrapper
+package pl.matiz22.chatml.data.wrappers
 
 import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
 import pl.matiz22.chatml.data.models.openai.OpenAiRequestContent

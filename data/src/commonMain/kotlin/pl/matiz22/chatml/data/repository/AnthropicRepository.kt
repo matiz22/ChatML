@@ -29,8 +29,8 @@ import pl.matiz22.chatml.data.models.anthropic.AnthropicStartStreamData
 import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
 import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
 import pl.matiz22.chatml.data.source.httpClient
-import pl.matiz22.chatml.data.wrapper.extractSystemMessage
-import pl.matiz22.chatml.data.wrapper.toAnthropic
+import pl.matiz22.chatml.data.wrappers.extractSystemMessage
+import pl.matiz22.chatml.data.wrappers.toAnthropic
 import pl.matiz22.chatml.domain.models.ChatMLException
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions

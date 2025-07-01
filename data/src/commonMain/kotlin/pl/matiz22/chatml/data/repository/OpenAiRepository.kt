@@ -28,7 +28,7 @@ import pl.matiz22.chatml.data.models.openai.OpenAiRequest
 import pl.matiz22.chatml.data.models.openai.OpenAiResponse
 import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
 import pl.matiz22.chatml.data.source.httpClient
-import pl.matiz22.chatml.data.wrapper.toOpenAiRequestMessage
+import pl.matiz22.chatml.data.wrappers.toOpenAiRequestMessage
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message

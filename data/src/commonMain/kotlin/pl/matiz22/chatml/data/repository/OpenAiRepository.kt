@@ -24,17 +24,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
 import pl.matiz22.chatml.data.models.openai.OpenAiRequest
-import pl.matiz22.chatml.data.models.openai.OpenAiRequestContent
-import pl.matiz22.chatml.data.models.openai.OpenAiRequestMessage
 import pl.matiz22.chatml.data.models.openai.OpenAiResponse
 import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
 import pl.matiz22.chatml.data.source.httpClient
+import pl.matiz22.chatml.data.wrapper.toOpenAiRequestMessage
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
-import pl.matiz22.chatml.domain.models.Content
-import pl.matiz22.chatml.domain.models.ContentType
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.repository.CompletionRepository
 
@@ -130,37 +126,12 @@ class OpenAiRepository(
         OpenAiRequest(
             messages =
                 messages.map { message: Message ->
-                    message.fromDomain()
+                    message.toOpenAiRequestMessage()
                 },
             model = model,
             stream = if (schema == null) options.stream else false,
             maxTokens = options.maxTokens,
             responseFormat = schema,
-        )
-
-    private fun Message.fromDomain(): OpenAiRequestMessage =
-        OpenAiRequestMessage(
-            content =
-                listOf(
-                    OpenAiRequestContent(
-                        imageUrl =
-                            when (val content = this.content) {
-                                is Content.Image -> OpenAiImageUrl(url = content.url)
-                                else -> null
-                            },
-                        type =
-                            when (this.content) {
-                                is Content.Image -> ContentType.IMAGE_URL.value
-                                else -> ContentType.TEXT.value
-                            },
-                        text =
-                            when (val content = this.content) {
-                                is Content.Text -> content.text
-                                else -> null
-                            },
-                    ),
-                ),
-            role = this.role.value,
         )
 
     companion object {

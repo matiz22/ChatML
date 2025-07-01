@@ -1,9 +1,9 @@
 package pl.matiz22.chatml.data.wrappers
 
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
+import pl.matiz22.chatml.data.models.anthropic.AnthropicImageSource
 import pl.matiz22.chatml.data.models.anthropic.AnthropicMessage
 import pl.matiz22.chatml.domain.models.Content
-import pl.matiz22.chatml.domain.models.ContentType
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
@@ -41,23 +41,30 @@ internal suspend fun List<Message>.toAnthropic(): List<AnthropicMessage> =
 internal suspend fun Content.toAnthropic(): AnthropicContent =
     when (this) {
         is Content.Image -> {
-            val base64 = ImageProcessor.process(this.url)
-            val (imageType, base64Image) =
-                ImageProcessor.extractImageTypeAndBase64(
-                    base64 ?: throw Exception("error while image processing"),
-                )
-            AnthropicContent(
-                type = "image",
-                source =
-                    AnthropicContent.Source(
-                        mediaType = imageType,
-                        data = base64Image,
-                    ),
-            )
+            val base64Prefix = "data:"
+            val imageSource =
+                if (this.url.startsWith(base64Prefix)) {
+                    val regex = Regex("""data:(.+?);base64,(.+)""")
+                    val match =
+                        regex.matchEntire(this.url)
+                            ?: throw IllegalArgumentException("Invalid base64 image data URL: ${this.url}")
+                    val (mediaType, base64Data) = match.destructured
+
+                    AnthropicImageSource.Base64(
+                        mediaType = mediaType,
+                        data = base64Data,
+                    )
+                } else {
+                    AnthropicImageSource.Url(this.url)
+                }
+
+            AnthropicContent.Image(source = imageSource)
         }
 
         is Content.Text -> {
-            AnthropicContent(type = ContentType.TEXT.value, this.text)
+            AnthropicContent.Text(
+                this.text,
+            )
         }
 
         is Content.Tool<*> -> {

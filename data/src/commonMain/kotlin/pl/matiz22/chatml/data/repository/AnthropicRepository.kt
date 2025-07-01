@@ -104,6 +104,8 @@ class AnthropicRepository(
                     httpClient.post("messages") {
                         setBody(body)
                     }
+                val b = Json.encodeToString(body)
+                println(b)
                 emit(response.body<AnthropicResponse>().toDomain())
             }
         }.catch { exception ->

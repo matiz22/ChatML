@@ -1,5 +1,6 @@
 package pl.matiz22.chatml.data.models.anthropic
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import pl.matiz22.chatml.domain.models.ChatResponse
@@ -21,6 +22,16 @@ internal data class AnthropicResponse(
             response =
                 this.content.map { anthropicContent ->
                     anthropicContent.toDomain()
+                },
+            tokens = usage.toDomain(),
+        )
+
+    fun <T> toDomain(serializer: KSerializer<T>): ChatResponse =
+        ChatResponse(
+            id = this.id,
+            response =
+                this.content.map { anthropicContent ->
+                    anthropicContent.toDomain(serializer)
                 },
             tokens = usage.toDomain(),
         )

@@ -2,24 +2,12 @@ package pl.matiz22.chatml.data.models.anthropic
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
-internal sealed class AnthropicTool(
+internal class AnthropicTool(
     val name: String,
-    val description: String? = null,
+    val description: String,
     @SerialName("input_schema")
-    val inputSchema: JsonSchema,
-) {
-    @Serializable
-    data class JsonSchema(
-        val type: String,
-        val properties: Map<String, SchemaProperty>? = null,
-        val required: List<String>? = null,
-    )
-
-    @Serializable
-    data class SchemaProperty(
-        val type: String,
-        val description: String? = null,
-    )
-}
+    val inputSchema: JsonElement,
+)

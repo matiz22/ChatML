@@ -3,11 +3,13 @@ package openai
 import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import models.Address
 import pl.matiz22.chatml.data.repository.OpenAiRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
+import pl.matiz22.chatml.domain.repository.util.completionJson
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -282,5 +284,37 @@ class OpenAiRepositoryIntegrationTest {
             assertNotNull(responseText)
             // Verify the response mentions something relevant to the image
             assertTrue(responseText.isNotEmpty())
+        }
+
+    @Test
+    fun testGenericCompletionWithOpenAiResponse() =
+        runTest {
+            println("Running testGenericCompletionWithOpenAiResponse")
+            // Given
+            val model = "gpt-4.1-nano"
+            val messages =
+                listOf(
+                    Message(
+                        role = Role.USER,
+                        content = Content.Text("Random Address in Paris null email"),
+                    ),
+                )
+            val options =
+                CompletionOptions(
+                    stream = false,
+                    maxTokens = 100,
+                )
+
+            // When
+            val resultFlow = repository.completionJson<Address>(model, messages, options)
+            val result = resultFlow.first()
+
+            // Then
+            assertNotNull(result)
+            assertEquals(
+                "Paris",
+                result.first().city,
+            )
+            println("OpenAiResponse: $result")
         }
 }

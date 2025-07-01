@@ -9,6 +9,8 @@ kotlinEnvVar = "1.0.5"
 kotlinxCoroutinesCore = "1.10.1"
 ktor = "3.1.1"
 kotlinxSerializationJson = "1.8.0"
+xemantic-ai-tool-schema = "1.1.2"
+
 
 [libraries]
 kotlin-envvar = { module = "dev.scottpierce:kotlin-env-var", version.ref = "kotlinEnvVar" }
@@ -29,6 +31,7 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+xemantic-ai-tool-schema = { group = "com.xemantic.ai", name = "xemantic-ai-tool-schema", version.ref = "xemantic-ai-tool-schema" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

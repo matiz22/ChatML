@@ -3,11 +3,13 @@ package anthropic
 import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import models.Address
 import pl.matiz22.chatml.data.repository.AnthropicRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
+import pl.matiz22.chatml.domain.repository.util.completion
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -228,6 +230,10 @@ class AnthropicRepositoryIntegrationTests {
                     is Content.Text -> {
                         println("Response text: ${content.text}")
                     }
+
+                    is Content.Tool<*> -> {
+                        println("Test content: ${content.value}")
+                    }
                 }
             }
 
@@ -283,5 +289,35 @@ class AnthropicRepositoryIntegrationTests {
             println(responseText)
             // Verify the response mentions something relevant to the image
             assertTrue(responseText.isNotEmpty())
+        }
+
+    @Test
+    fun testGenericCompletionWithAnthropicResponseUsingAddress() =
+        runTest {
+            println("Running testGenericCompletionWithAnthropicResponseUsingAddress")
+            // Given
+            val model = "claude-3-haiku-20240307"
+            val messages =
+                listOf(
+                    Message(
+                        role = Role.USER,
+                        content = Content.Text("Random Address in Paris null email"),
+                    ),
+                )
+            val options =
+                CompletionOptions(
+                    stream = false,
+                    maxTokens = 100,
+                )
+
+            // When
+            val resultFlow = repository.completion<Address>(model, messages, options)
+            val result = resultFlow.first()
+
+            // Then
+            assertNotNull(result)
+            val content = result.response.first { it.content is Content.Tool<*> }.content as Content.Tool<Address>
+            assertEquals("Paris", content.value.city)
+            println("AnthropicResponse: $result")
         }
 }

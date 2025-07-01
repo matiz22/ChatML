@@ -2,6 +2,7 @@ package pl.matiz22.chatml.data.models.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 internal data class OpenAiRequest(
@@ -15,4 +16,6 @@ internal data class OpenAiRequest(
     val stream: Boolean? = null,
     @SerialName("max_completion_tokens")
     val maxTokens: Int? = null,
+    @SerialName("response_format")
+    val responseFormat: JsonElement? = null,
 )

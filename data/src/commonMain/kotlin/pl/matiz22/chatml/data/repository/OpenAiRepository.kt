@@ -1,5 +1,6 @@
 package pl.matiz22.chatml.data.repository
 
+import com.xemantic.ai.tool.schema.generator.generateSchema
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
@@ -17,7 +18,13 @@ import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import pl.matiz22.chatml.data.models.openai.OpenAiChoice
 import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
 import pl.matiz22.chatml.data.models.openai.OpenAiRequest
@@ -79,19 +86,72 @@ class OpenAiRepository(
             }
         }
 
+    @OptIn(ExperimentalSerializationApi::class)
+    override suspend fun <T> completionJson(
+        model: String,
+        messages: List<Message>,
+        options: CompletionOptions,
+        serializer: KSerializer<T>,
+    ): Flow<List<T>> =
+        flow {
+            val schemaText =
+                generateSchema(
+                    serializer.descriptor,
+                    inlineRefs = true,
+                    additionalProperties = false,
+                ).toString()
+            val parsed = Json.parseToJsonElement(schemaText)
+
+            val openAiText =
+                buildJsonObject {
+                    put("type", JsonPrimitive("json_schema"))
+                    put(
+                        "json_schema",
+                        buildJsonObject {
+                            put("name", JsonPrimitive("schema"))
+                            put("schema", parsed)
+                        },
+                    )
+                }
+
+            println(openAiText)
+            val body = prepareRequestBody(model, messages, options, openAiText)
+
+            val response =
+                client.post("chat/completions") {
+                    setBody(body)
+                }
+            val openAiResponse: OpenAiResponse = response.body()
+            val responseChoices =
+                openAiResponse
+                    .toMessages()
+                    .response
+                    .filter { message ->
+                        message.role == Role.ASSISTANT && message.content is Content.Text
+                    }.map { message ->
+                        when (val content = message.content) {
+                            is Content.Text -> Json.decodeFromString(serializer, content.text)
+                            else -> throw IllegalArgumentException("Expected text content")
+                        }
+                    }
+            emit(responseChoices)
+        }
+
     private fun prepareRequestBody(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
+        schema: JsonElement? = null,
     ): OpenAiRequest =
         OpenAiRequest(
-            model = model,
-            stream = options.stream,
             messages =
                 messages.map { message: Message ->
                     message.fromDomain()
                 },
+            model = model,
+            stream = options.stream,
             maxTokens = options.maxTokens,
+            responseFormat = schema,
         )
 
     private fun Message.fromDomain(): OpenAiRequestMessage =

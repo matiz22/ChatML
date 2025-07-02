@@ -5,5 +5,6 @@ enum class ContentType(
 ) {
     TEXT("text"),
     IMAGE_URL("image_url"),
+    BASE_64("base64"),
     TOOL_USE("tool_use"),
 }

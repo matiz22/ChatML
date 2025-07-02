@@ -104,7 +104,6 @@ class OpenAiRepository(
                     )
                 }
 
-            println(openAiText)
             val body = prepareRequestBody(model, messages, options, openAiText)
 
             val response =

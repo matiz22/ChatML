@@ -23,7 +23,7 @@ import kotlinx.serialization.json.Json
 import pl.matiz22.chatml.data.models.ollama.OllamaResponse
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.util.sanitizeJsonSchema
-import pl.matiz22.chatml.data.wrappers.prepareRequestBody
+import pl.matiz22.chatml.data.wrappers.prepareRequestBodyOllama
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
@@ -41,7 +41,7 @@ class OllamaRepository(
     ): Flow<ChatResponse> =
         flow {
             val body =
-                prepareRequestBody(
+                prepareRequestBodyOllama(
                     model = model,
                     messages = messages,
                     options = options,
@@ -80,7 +80,7 @@ class OllamaRepository(
     ): Flow<ChatResponse> =
         flow {
             val body =
-                prepareRequestBody(
+                prepareRequestBodyOllama(
                     model,
                     messages,
                     options.copy(stream = false),

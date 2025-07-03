@@ -3,6 +3,10 @@ package pl.matiz22.chatml.data.wrappers
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
 import pl.matiz22.chatml.data.models.anthropic.AnthropicImageSource
 import pl.matiz22.chatml.data.models.anthropic.AnthropicMessage
+import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
+import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
+import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
+import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
@@ -71,3 +75,23 @@ internal fun Content.toAnthropic(): AnthropicContent =
             throw IllegalArgumentException("Provided messages cannot contain tools in messages")
         }
     }
+
+internal fun prepareRequestBodyAnthropic(
+    model: String,
+    messages: List<Message>,
+    system: String,
+    options: CompletionOptions,
+    tools: List<AnthropicTool>? = null,
+    toolChoice: AnthropicToolChoice? = null,
+): AnthropicRequest =
+    AnthropicRequest(
+        model = model,
+        messages = messages.toAnthropic(),
+        system = system,
+        stream = options.stream,
+        maxTokens = options.maxTokens,
+        temperature = options.temperature,
+        topP = options.topP,
+        tools = tools,
+        toolChoice = toolChoice,
+    )

@@ -32,11 +32,11 @@ import pl.matiz22.chatml.data.wrappers.toOpenAiRequestMessage
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
-import pl.matiz22.chatml.domain.repository.CompletionRepository
+import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class OpenAiRepository(
     private val apiKey: String,
-) : CompletionRepository {
+) : ChatRepository {
     private val client = httpClient(openAiHttpClientConfig(apiKey))
 
     override suspend fun completion(

@@ -6,7 +6,7 @@ import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
 
-interface CompletionRepository {
+interface ChatRepository {
     suspend fun completion(
         model: String,
         messages: List<Message>,

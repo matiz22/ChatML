@@ -35,11 +35,11 @@ import pl.matiz22.chatml.domain.models.ChatMLException
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
-import pl.matiz22.chatml.domain.repository.CompletionRepository
+import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class AnthropicRepository(
     private val apiKey: String,
-) : CompletionRepository {
+) : ChatRepository {
     private val httpClient = httpClient(anthropicHttpClientConfig(apiKey))
 
     override suspend fun completion(

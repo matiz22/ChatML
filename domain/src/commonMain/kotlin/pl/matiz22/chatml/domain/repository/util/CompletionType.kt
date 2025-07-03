@@ -5,9 +5,9 @@ import kotlinx.serialization.serializer
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
-import pl.matiz22.chatml.domain.repository.CompletionRepository
+import pl.matiz22.chatml.domain.repository.ChatRepository
 
-suspend inline fun <reified T> CompletionRepository.completion(
+suspend inline fun <reified T> ChatRepository.completion(
     model: String,
     messages: List<Message>,
     options: CompletionOptions,

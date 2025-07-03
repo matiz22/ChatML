@@ -7,7 +7,7 @@ import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
-fun List<Message>.extractSystemMessage(): String =
+internal fun List<Message>.extractSystemMessage(): String =
     this
         .filter { message: Message ->
             message.role == Role.SYSTEM
@@ -38,7 +38,7 @@ internal suspend fun List<Message>.toAnthropic(): List<AnthropicMessage> =
             )
         }
 
-internal suspend fun Content.toAnthropic(): AnthropicContent =
+internal fun Content.toAnthropic(): AnthropicContent =
     when (this) {
         is Content.Image -> {
             val base64Prefix = "data:"

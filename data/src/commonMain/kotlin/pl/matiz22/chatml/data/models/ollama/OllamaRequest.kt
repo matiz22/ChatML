@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
 @Serializable
-data class OllamaRequest(
+internal data class OllamaRequest(
     @SerialName("messages")
     val messages: List<OllamaMessage>,
     @SerialName("model")

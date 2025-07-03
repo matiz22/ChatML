@@ -1,3 +1,3 @@
 package pl.matiz22.chatml.data.util
 
-expect fun generateUUID(): String
+internal expect fun generateUUID(): String

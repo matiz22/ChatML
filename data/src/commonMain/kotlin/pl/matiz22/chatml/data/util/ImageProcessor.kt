@@ -15,7 +15,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  * A utility class to handle image URL and base64 string operations.
  * Uses Ktor client for network operations.
  */
-class ImageProcessor {
+internal class ImageProcessor {
     private val client =
         httpClient {
             expectSuccess = true

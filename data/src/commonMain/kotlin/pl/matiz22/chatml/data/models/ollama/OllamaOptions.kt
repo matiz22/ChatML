@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OllamaOptions(
+internal data class OllamaOptions(
     @SerialName("frequency_penalty")
     val frequencyPenalty: Double? = null,
     @SerialName("low_vram")

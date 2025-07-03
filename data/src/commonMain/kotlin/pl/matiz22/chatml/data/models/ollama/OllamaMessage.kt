@@ -9,7 +9,7 @@ import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
 @Serializable
-data class OllamaMessage(
+internal data class OllamaMessage(
     @SerialName("content")
     val content: String,
     @SerialName("images")

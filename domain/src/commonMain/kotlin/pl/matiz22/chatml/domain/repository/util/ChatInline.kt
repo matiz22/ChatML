@@ -12,7 +12,7 @@ suspend inline fun <reified T> ChatRepository.completion(
     messages: List<Message>,
     options: CompletionOptions,
 ): Flow<ChatResponse> =
-    completion(
+    chat(
         model = model,
         messages = messages,
         options = options,

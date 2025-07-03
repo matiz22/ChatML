@@ -39,7 +39,7 @@ class OpenAiRepository(
 ) : ChatRepository {
     private val client = httpClient(openAiHttpClientConfig(apiKey))
 
-    override suspend fun completion(
+    override suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -77,7 +77,7 @@ class OpenAiRepository(
         }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun <T> completion(
+    override suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,

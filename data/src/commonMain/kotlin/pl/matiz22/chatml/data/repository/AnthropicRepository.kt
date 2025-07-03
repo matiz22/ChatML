@@ -42,7 +42,7 @@ class AnthropicRepository(
 ) : ChatRepository {
     private val httpClient = httpClient(anthropicHttpClientConfig(apiKey))
 
-    override suspend fun completion(
+    override suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -114,7 +114,7 @@ class AnthropicRepository(
             )
         }
 
-    override suspend fun <T> completion(
+    override suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,

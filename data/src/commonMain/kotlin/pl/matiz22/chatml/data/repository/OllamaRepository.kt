@@ -34,7 +34,7 @@ class OllamaRepository(
 ) : ChatRepository {
     private val client = httpClient(ollamaHttpClientConfig(url))
 
-    override suspend fun completion(
+    override suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -73,7 +73,7 @@ class OllamaRepository(
             }
         }
 
-    override suspend fun <T> completion(
+    override suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,

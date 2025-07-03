@@ -35,7 +35,6 @@ internal class ImageProcessor {
                 try {
                     downloadImageAndConvertToBase64(input)
                 } catch (e: Exception) {
-                    println("Error downloading or converting image: ${e.message}")
                     null
                 }
             }
@@ -43,7 +42,6 @@ internal class ImageProcessor {
                 input
             }
             else -> {
-                println("Input is neither a valid URL nor a valid base64 image")
                 null
             }
         }
@@ -142,11 +140,9 @@ internal class ImageProcessor {
                     val base64 = Base64.encode(imageBytes)
                     return@withContext "data:image/$format;base64,$base64"
                 } else {
-                    println("Failed to download image: ${response.status}")
                     return@withContext null
                 }
             } catch (e: Exception) {
-                println("Error downloading image: ${e.message}")
                 return@withContext null
             }
         }

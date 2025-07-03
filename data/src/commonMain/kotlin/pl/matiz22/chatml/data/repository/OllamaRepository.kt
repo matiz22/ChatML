@@ -68,7 +68,6 @@ class OllamaRepository(
                     client.post {
                         setBody(body)
                     }
-                println(response.body<String>())
                 emit(response.body<OllamaResponse>().toChatResponse())
             }
         }

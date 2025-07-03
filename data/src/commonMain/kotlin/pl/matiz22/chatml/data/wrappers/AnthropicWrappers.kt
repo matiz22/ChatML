@@ -27,7 +27,7 @@ internal fun List<Message>.extractSystemMessage(): String =
             }
         }
 
-internal suspend fun List<Message>.toAnthropic(): List<AnthropicMessage> =
+internal fun List<Message>.toAnthropic(): List<AnthropicMessage> =
     this
         .filter { message: Message ->
             message.role != Role.SYSTEM

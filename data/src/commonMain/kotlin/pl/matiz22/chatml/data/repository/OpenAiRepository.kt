@@ -131,6 +131,8 @@ class OpenAiRepository(
             stream = if (schema == null) options.stream else false,
             maxTokens = options.maxTokens,
             responseFormat = schema,
+            temperature = options.temperature,
+            topP = options.topP,
         )
 
     companion object {

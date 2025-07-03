@@ -49,7 +49,7 @@ internal suspend fun Message.toOllamaMessage(): OllamaMessage =
 
 internal fun CompletionOptions.toOllamaOptions(): OllamaOptions =
     OllamaOptions(
-        topP = this.top_p,
+        topP = this.topP,
         temperature = this.temperature,
         numPredict = this.maxTokens,
     )

@@ -56,6 +56,8 @@ class AnthropicRepository(
                     system = systemMessage,
                     stream = options.stream,
                     maxTokens = options.maxTokens,
+                    temperature = options.temperature,
+                    topP = options.topP,
                 )
             if (options.stream) {
                 val session =

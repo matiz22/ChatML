@@ -50,7 +50,7 @@ class OllamaRepository(
             if (options.stream) {
                 val response =
                     client.post {
-                        setBody(Json.encodeToString(body))
+                        setBody(body)
                     }
 
                 // Body as channel because sseClient does not support Text/event

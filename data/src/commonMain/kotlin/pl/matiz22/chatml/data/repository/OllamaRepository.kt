@@ -23,25 +23,25 @@ import kotlinx.serialization.json.Json
 import pl.matiz22.chatml.data.models.ollama.OllamaResponse
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.util.sanitizeJsonSchema
-import pl.matiz22.chatml.data.wrappers.prepareRequestBody
+import pl.matiz22.chatml.data.wrappers.prepareRequestBodyOllama
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
-import pl.matiz22.chatml.domain.repository.CompletionRepository
+import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class OllamaRepository(
     private val url: String = "http://localhost:11434/api/generate",
-) : CompletionRepository {
+) : ChatRepository {
     private val client = httpClient(ollamaHttpClientConfig(url))
 
-    override suspend fun completion(
+    override suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
     ): Flow<ChatResponse> =
         flow {
             val body =
-                prepareRequestBody(
+                prepareRequestBodyOllama(
                     model = model,
                     messages = messages,
                     options = options,
@@ -68,12 +68,11 @@ class OllamaRepository(
                     client.post {
                         setBody(body)
                     }
-                println(response.body<String>())
                 emit(response.body<OllamaResponse>().toChatResponse())
             }
         }
 
-    override suspend fun <T> completion(
+    override suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -81,7 +80,7 @@ class OllamaRepository(
     ): Flow<ChatResponse> =
         flow {
             val body =
-                prepareRequestBody(
+                prepareRequestBodyOllama(
                     model,
                     messages,
                     options.copy(stream = false),

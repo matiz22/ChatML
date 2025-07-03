@@ -11,7 +11,7 @@ import pl.matiz22.chatml.domain.models.Role
 import kotlin.jvm.JvmName
 
 @Serializable
-sealed class AnthropicContent {
+internal sealed class AnthropicContent {
     @SerialName("text")
     @Serializable
     data class Text(

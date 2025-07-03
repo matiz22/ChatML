@@ -18,34 +18,31 @@ import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import pl.matiz22.chatml.data.models.openai.OpenAiRequest
 import pl.matiz22.chatml.data.models.openai.OpenAiResponse
 import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
 import pl.matiz22.chatml.data.source.httpClient
-import pl.matiz22.chatml.data.wrappers.toOpenAiRequestMessage
+import pl.matiz22.chatml.data.wrappers.prepareRequestBodyOpenAi
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
-import pl.matiz22.chatml.domain.repository.CompletionRepository
+import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class OpenAiRepository(
     private val apiKey: String,
-) : CompletionRepository {
+) : ChatRepository {
     private val client = httpClient(openAiHttpClientConfig(apiKey))
 
-    override suspend fun completion(
+    override suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
     ): Flow<ChatResponse> =
         flow {
-            val requestBody = prepareRequestBody(model, messages, options)
+            val requestBody = prepareRequestBodyOpenAi(model, messages, options)
 
             if (options.stream) {
                 val session =
@@ -76,8 +73,7 @@ class OpenAiRepository(
             }
         }
 
-    @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun <T> completion(
+    override suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -104,7 +100,7 @@ class OpenAiRepository(
                     )
                 }
 
-            val body = prepareRequestBody(model, messages, options, openAiText)
+            val body = prepareRequestBodyOpenAi(model, messages, options, openAiText)
 
             val response =
                 client.post("chat/completions") {
@@ -115,23 +111,6 @@ class OpenAiRepository(
                 openAiResponse.toMessages(serializer)
             emit(responseChoices)
         }
-
-    private fun prepareRequestBody(
-        model: String,
-        messages: List<Message>,
-        options: CompletionOptions,
-        schema: JsonElement? = null,
-    ): OpenAiRequest =
-        OpenAiRequest(
-            messages =
-                messages.map { message: Message ->
-                    message.toOpenAiRequestMessage()
-                },
-            model = model,
-            stream = if (schema == null) options.stream else false,
-            maxTokens = options.maxTokens,
-            responseFormat = schema,
-        )
 
     companion object {
         private fun openAiHttpClientConfig(apiKey: String): HttpClientConfig<*>.() -> Unit =

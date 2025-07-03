@@ -8,7 +8,7 @@ import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.Tokens
 
 @Serializable
-data class OllamaResponse(
+internal data class OllamaResponse(
     @SerialName("created_at")
     val createdAt: String,
     @SerialName("done")

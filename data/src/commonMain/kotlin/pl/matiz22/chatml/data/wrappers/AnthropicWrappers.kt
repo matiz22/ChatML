@@ -3,11 +3,15 @@ package pl.matiz22.chatml.data.wrappers
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
 import pl.matiz22.chatml.data.models.anthropic.AnthropicImageSource
 import pl.matiz22.chatml.data.models.anthropic.AnthropicMessage
+import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
+import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
+import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
+import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 
-fun List<Message>.extractSystemMessage(): String =
+internal fun List<Message>.extractSystemMessage(): String =
     this
         .filter { message: Message ->
             message.role == Role.SYSTEM
@@ -27,7 +31,7 @@ fun List<Message>.extractSystemMessage(): String =
             }
         }
 
-internal suspend fun List<Message>.toAnthropic(): List<AnthropicMessage> =
+internal fun List<Message>.toAnthropic(): List<AnthropicMessage> =
     this
         .filter { message: Message ->
             message.role != Role.SYSTEM
@@ -38,7 +42,7 @@ internal suspend fun List<Message>.toAnthropic(): List<AnthropicMessage> =
             )
         }
 
-internal suspend fun Content.toAnthropic(): AnthropicContent =
+internal fun Content.toAnthropic(): AnthropicContent =
     when (this) {
         is Content.Image -> {
             val base64Prefix = "data:"
@@ -71,3 +75,23 @@ internal suspend fun Content.toAnthropic(): AnthropicContent =
             throw IllegalArgumentException("Provided messages cannot contain tools in messages")
         }
     }
+
+internal fun prepareRequestBodyAnthropic(
+    model: String,
+    messages: List<Message>,
+    system: String,
+    options: CompletionOptions,
+    tools: List<AnthropicTool>? = null,
+    toolChoice: AnthropicToolChoice? = null,
+): AnthropicRequest =
+    AnthropicRequest(
+        model = model,
+        messages = messages.toAnthropic(),
+        system = system,
+        stream = options.stream,
+        maxTokens = options.maxTokens,
+        temperature = options.temperature,
+        topP = options.topP,
+        tools = tools,
+        toolChoice = toolChoice,
+    )

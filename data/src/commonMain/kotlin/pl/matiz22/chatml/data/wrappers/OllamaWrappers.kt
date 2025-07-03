@@ -8,7 +8,7 @@ import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.ContentType
 import pl.matiz22.chatml.domain.models.Message
 
-internal suspend fun prepareRequestBody(
+internal suspend fun prepareRequestBodyOllama(
     model: String,
     messages: List<Message>,
     options: CompletionOptions,
@@ -49,7 +49,7 @@ internal suspend fun Message.toOllamaMessage(): OllamaMessage =
 
 internal fun CompletionOptions.toOllamaOptions(): OllamaOptions =
     OllamaOptions(
-        topP = this.top_p,
+        topP = this.topP,
         temperature = this.temperature,
         numPredict = this.maxTokens,
     )

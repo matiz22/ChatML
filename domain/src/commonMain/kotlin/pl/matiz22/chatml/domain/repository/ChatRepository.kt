@@ -6,14 +6,14 @@ import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
 
-interface CompletionRepository {
-    suspend fun completion(
+interface ChatRepository {
+    suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
     ): Flow<ChatResponse>
 
-    suspend fun <T> completion(
+    suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,

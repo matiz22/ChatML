@@ -23,26 +23,25 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import pl.matiz22.chatml.data.models.anthropic.AnthropicContentBlockStream
 import pl.matiz22.chatml.data.models.anthropic.AnthropicMessageDelta
-import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
 import pl.matiz22.chatml.data.models.anthropic.AnthropicResponse
 import pl.matiz22.chatml.data.models.anthropic.AnthropicStartStreamData
 import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
 import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.wrappers.extractSystemMessage
-import pl.matiz22.chatml.data.wrappers.toAnthropic
+import pl.matiz22.chatml.data.wrappers.prepareRequestBodyAnthropic
 import pl.matiz22.chatml.domain.models.ChatMLException
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
-import pl.matiz22.chatml.domain.repository.CompletionRepository
+import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class AnthropicRepository(
     private val apiKey: String,
-) : CompletionRepository {
+) : ChatRepository {
     private val httpClient = httpClient(anthropicHttpClientConfig(apiKey))
 
-    override suspend fun completion(
+    override suspend fun chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -50,13 +49,7 @@ class AnthropicRepository(
         flow {
             val systemMessage = messages.extractSystemMessage()
             val body =
-                AnthropicRequest(
-                    model = model,
-                    messages = messages.toAnthropic(),
-                    system = systemMessage,
-                    stream = options.stream,
-                    maxTokens = options.maxTokens,
-                )
+                prepareRequestBodyAnthropic(model, messages, systemMessage, options)
             if (options.stream) {
                 val session =
                     httpClient.sseSession("messages") {
@@ -112,7 +105,7 @@ class AnthropicRepository(
             )
         }
 
-    override suspend fun <T> completion(
+    override suspend fun <T> chat(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -136,14 +129,13 @@ class AnthropicRepository(
                 )
 
             val body =
-                AnthropicRequest(
-                    model = model,
-                    messages = messages.toAnthropic(),
-                    system = system,
-                    stream = false,
-                    maxTokens = options.maxTokens,
-                    tools = listOf(anthropicTool),
-                    toolChoice = AnthropicToolChoice.SpecificTool(name),
+                prepareRequestBodyAnthropic(
+                    model,
+                    messages,
+                    system,
+                    options,
+                    listOf(anthropicTool),
+                    AnthropicToolChoice.SpecificTool(name),
                 )
 
             val response =
@@ -168,7 +160,8 @@ class AnthropicRepository(
                 }
 
                 install(HttpTimeout) {
-                    requestTimeoutMillis = 30000
+                    requestTimeoutMillis = 1_000_000L
+                    socketTimeoutMillis = 1_000_000L
                 }
 
                 install(SSE)

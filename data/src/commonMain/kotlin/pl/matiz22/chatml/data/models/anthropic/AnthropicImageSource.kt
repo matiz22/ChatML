@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class AnthropicImageSource {
+internal sealed class AnthropicImageSource {
     @SerialName("url")
     @Serializable
     data class Url(

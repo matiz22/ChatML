@@ -8,7 +8,7 @@ import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
-import pl.matiz22.chatml.domain.repository.util.completion
+import pl.matiz22.chatml.domain.repository.util.chat
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -43,7 +43,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             resultFlow.collect { response ->
                 when (val content = response.response.first().content) {
                     is Content.Text -> {
@@ -64,7 +64,7 @@ class OllamaRepositoryIntegrationTests {
         }
 
     @Test
-    fun testCompletionWithTextMessage() =
+    fun testChatWithTextMessage() =
         runTest {
             println("Running testCompletionWithTextMessage")
             // Given
@@ -84,7 +84,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -101,7 +101,7 @@ class OllamaRepositoryIntegrationTests {
         }
 
     @Test
-    fun testCompletionWithImageMessage() =
+    fun testChatWithImageMessage() =
         runTest {
             println("Running testCompletionWithImageMessage")
             // Given
@@ -126,7 +126,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -143,7 +143,7 @@ class OllamaRepositoryIntegrationTests {
         }
 
     @Test
-    fun testCompletionWithSystemMessage() =
+    fun testChatWithSystemMessage() =
         runTest {
             println("Running testCompletionWithSystemMessage")
             // Given
@@ -169,7 +169,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -211,7 +211,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -228,7 +228,7 @@ class OllamaRepositoryIntegrationTests {
         }
 
     @Test
-    fun testGenericCompletionWithOllamaResponseUsingAddress() =
+    fun testGenericChatWithOllamaResponseUsingAddress() =
         runTest {
             println("Running testGenericCompletionWithOllamaResponseUsingAddress")
             // Given
@@ -247,7 +247,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion<Address>(model, messages, options)
+            val resultFlow = repository.chat<Address>(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -259,7 +259,7 @@ class OllamaRepositoryIntegrationTests {
         }
 
     @Test
-    fun testCompletionWithBase64Image() =
+    fun testChatWithBase64Image() =
         runTest {
             println("Running testCompletionWithBase64Image")
             // Given
@@ -285,7 +285,7 @@ class OllamaRepositoryIntegrationTests {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then

@@ -18,4 +18,8 @@ internal data class OpenAiRequest(
     val maxTokens: Int? = null,
     @SerialName("response_format")
     val responseFormat: JsonElement? = null,
+    @SerialName("temperature")
+    val temperature: Double? = null,
+    @SerialName("top_p")
+    val topP: Double? = null,
 )

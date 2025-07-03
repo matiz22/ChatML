@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AnthropicTextDelta(
+internal data class AnthropicTextDelta(
     @SerialName("text")
     val text: String,
     @SerialName("type")

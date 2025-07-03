@@ -9,7 +9,7 @@ import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
-import pl.matiz22.chatml.domain.repository.util.completion
+import pl.matiz22.chatml.domain.repository.util.chat
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -45,7 +45,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -90,7 +90,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -135,7 +135,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -177,7 +177,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -212,7 +212,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
             resultFlow.collect {
                 when (
@@ -274,7 +274,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion(model, messages, options)
+            val resultFlow = repository.chat(model, messages, options)
             val result = resultFlow.first()
 
             // Then
@@ -310,7 +310,7 @@ class OpenAiRepositoryIntegrationTest {
                 )
 
             // When
-            val resultFlow = repository.completion<Address>(model, messages, options)
+            val resultFlow = repository.chat<Address>(model, messages, options)
             val result = resultFlow.first()
 
             // Then

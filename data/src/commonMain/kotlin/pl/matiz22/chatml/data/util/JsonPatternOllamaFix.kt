@@ -6,7 +6,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonPrimitive
 
-fun sanitizeJsonSchema(schema: JsonElement): JsonElement = fixObject(schema)
+internal fun sanitizeJsonSchema(schema: JsonElement): JsonElement = fixObject(schema)
 
 private fun fixObject(element: JsonElement): JsonElement =
     when (element) {

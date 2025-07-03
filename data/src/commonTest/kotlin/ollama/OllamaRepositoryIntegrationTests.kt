@@ -1,4 +1,4 @@
-package ollama
+package ollama.ollama
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

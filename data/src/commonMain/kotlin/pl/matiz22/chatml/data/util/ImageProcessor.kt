@@ -170,5 +170,14 @@ class ImageProcessor {
                 throw IllegalArgumentException("Invalid image input format")
             }
         }
+
+        fun extractRawBase64(input: String): String {
+            val prefixIndex = input.indexOf("base64,")
+            return if (prefixIndex != -1) {
+                input.substring(prefixIndex + "base64,".length)
+            } else {
+                input
+            }
+        }
     }
 }

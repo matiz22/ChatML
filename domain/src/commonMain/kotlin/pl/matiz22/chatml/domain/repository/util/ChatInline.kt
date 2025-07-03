@@ -7,7 +7,7 @@ import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.repository.ChatRepository
 
-suspend inline fun <reified T> ChatRepository.completion(
+suspend inline fun <reified T> ChatRepository.chat(
     model: String,
     messages: List<Message>,
     options: CompletionOptions,

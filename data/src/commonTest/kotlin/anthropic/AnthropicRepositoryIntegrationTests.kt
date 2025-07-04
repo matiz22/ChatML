@@ -9,6 +9,7 @@ import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
+import pl.matiz22.chatml.domain.models.TypedContent
 import pl.matiz22.chatml.domain.repository.util.chat
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -227,12 +228,9 @@ class AnthropicRepositoryIntegrationTests {
                         println(content.url + " is an image URL.")
                         println(content.type.value + " is the content type.")
                     }
+
                     is Content.Text -> {
                         println("Response text: ${content.text}")
-                    }
-
-                    is Content.Tool<*> -> {
-                        println("Test content: ${content.value}")
                     }
                 }
             }
@@ -316,7 +314,9 @@ class AnthropicRepositoryIntegrationTests {
 
             // Then
             assertNotNull(result)
-            val content = result.response.first { it.content is Content.Tool<*> }.content as Content.Tool<Address>
+
+            val content =
+                result.response.first { it.content is TypedContent.Tool }.content as TypedContent.Tool<Address>
             assertEquals("Paris", content.value.city)
             println("AnthropicResponse: $result")
         }

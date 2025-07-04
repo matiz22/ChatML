@@ -7,6 +7,8 @@ import kotlinx.serialization.json.Json
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
+import pl.matiz22.chatml.domain.models.TypedContent
+import pl.matiz22.chatml.domain.models.TypedMessage
 
 @Serializable
 internal data class OllamaMessage(
@@ -17,18 +19,18 @@ internal data class OllamaMessage(
     @SerialName("role")
     val role: String,
 ) {
-    internal fun <T> toMessages(serializer: KSerializer<T>): List<Message> {
+    internal fun <T> toMessages(serializer: KSerializer<T>): List<TypedMessage<T>> {
         val textContent = Json.decodeFromString(serializer, this.content)
         val images =
             this.images?.map { img ->
-                Message(
+                TypedMessage<T>(
                     role = Role.valueOf(this.role),
-                    content = Content.Image(url = img),
+                    content = TypedContent.Image(url = img),
                 )
             }
         return listOf(
-            Message(
-                content = Content.Tool(value = textContent),
+            TypedMessage(
+                content = TypedContent.Tool(value = textContent),
                 role = Role.valueOf(this.role.uppercase()),
             ),
             *(images?.toTypedArray() ?: emptyArray()),

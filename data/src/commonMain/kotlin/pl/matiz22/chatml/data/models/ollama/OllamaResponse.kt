@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import pl.matiz22.chatml.data.util.generateUUID
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.Tokens
+import pl.matiz22.chatml.domain.models.TypedChatResponse
 
 @Serializable
 internal data class OllamaResponse(
@@ -32,8 +33,8 @@ internal data class OllamaResponse(
     @SerialName("total_duration")
     val totalDuration: Long? = null,
 ) {
-    internal fun <T> toChatResponse(serializer: KSerializer<T>): ChatResponse =
-        ChatResponse(
+    internal fun <T> toChatResponse(serializer: KSerializer<T>): TypedChatResponse<T> =
+        TypedChatResponse(
             id = generateUUID(),
             response = this.message.toMessages<T>(serializer),
             tokens =

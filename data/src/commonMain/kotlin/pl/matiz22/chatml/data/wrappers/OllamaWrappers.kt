@@ -28,7 +28,6 @@ internal suspend fun Message.toOllamaMessage(): OllamaMessage =
             when (val content = this.content) {
                 is Content.Image -> ""
                 is Content.Text -> content.text
-                is Content.Tool<*> -> throw IllegalArgumentException("Provided messages cannot contain tools in messages")
             },
         images =
             when (val content = this.content) {

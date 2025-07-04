@@ -27,6 +27,7 @@ import pl.matiz22.chatml.data.wrappers.prepareRequestBodyOllama
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
+import pl.matiz22.chatml.domain.models.TypedChatResponse
 import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class OllamaRepository(
@@ -77,7 +78,7 @@ class OllamaRepository(
         messages: List<Message>,
         options: CompletionOptions,
         serializer: KSerializer<T>,
-    ): Flow<ChatResponse> =
+    ): Flow<TypedChatResponse<T>> =
         flow {
             val body =
                 prepareRequestBodyOllama(

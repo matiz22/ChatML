@@ -8,6 +8,8 @@ import kotlinx.serialization.json.JsonElement
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
+import pl.matiz22.chatml.domain.models.TypedContent
+import pl.matiz22.chatml.domain.models.TypedMessage
 import kotlin.jvm.JvmName
 
 @Serializable
@@ -46,22 +48,26 @@ internal sealed class AnthropicContent {
         }
 
     @JvmName("toDomainTool")
-    fun <T> toDomain(serializer: KSerializer<T>): Message =
+    fun <T> toDomain(serializer: KSerializer<T>): TypedMessage<T> =
         when (this) {
             is Image -> throw IllegalStateException("Image are not supported in Anthropic")
             is Text -> {
-                Message(
+                TypedMessage(
                     role = Role.ASSISTANT,
-                    content = Content.Text(this.text),
+                    content = TypedContent.Text(this.text),
                 )
             }
 
             is ToolUse -> {
-                Message(
+                TypedMessage(
                     role = Role.ASSISTANT,
                     content =
-                        Content.Tool(
-                            value = Json.decodeFromString(serializer, this.input.toString()),
+                        TypedContent.Tool(
+                            value =
+                                Json.decodeFromString(
+                                    serializer,
+                                    this.input.toString(),
+                                ),
                         ),
                 )
             }

@@ -8,6 +8,7 @@ import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
+import pl.matiz22.chatml.domain.models.TypedContent
 import pl.matiz22.chatml.domain.repository.util.chat
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -253,7 +254,7 @@ class OllamaRepositoryIntegrationTests {
             // Then
             assertNotNull(result)
             val content =
-                result.response.first { it.content is Content.Tool<*> }.content as Content.Tool<Address>
+                result.response.first { it.content is TypedContent.Tool }.content as TypedContent.Tool
             assertEquals("Paris", content.value.city)
             println("OllamaResponse: $result")
         }

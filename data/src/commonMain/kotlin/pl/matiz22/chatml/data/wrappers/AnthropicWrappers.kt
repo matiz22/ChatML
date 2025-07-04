@@ -24,10 +24,6 @@ internal fun List<Message>.extractSystemMessage(): String =
                 is Content.Text -> {
                     content.text
                 }
-
-                is Content.Tool<*> -> {
-                    throw IllegalArgumentException("Provided messages cannot contain tools in messages")
-                }
             }
         }
 
@@ -69,10 +65,6 @@ internal fun Content.toAnthropic(): AnthropicContent =
             AnthropicContent.Text(
                 this.text,
             )
-        }
-
-        is Content.Tool<*> -> {
-            throw IllegalArgumentException("Provided messages cannot contain tools in messages")
         }
     }
 

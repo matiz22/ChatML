@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class OpenAiModelsRepositoryIntegrationTest {
+class OpenAiModelsRepositoryIntegrationTests {
     private lateinit var repository: OpenAiModelsRepository
 
     @BeforeTest

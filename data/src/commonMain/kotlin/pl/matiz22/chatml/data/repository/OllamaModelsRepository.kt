@@ -18,7 +18,7 @@ class OllamaModelsRepository(
             ollamaHttpClientConfig(url),
         ),
 ) : ModelsRepository {
-    override suspend fun geAvailableModels(): Flow<List<Model>> =
+    override suspend fun getAvailableModels(): Flow<List<Model>> =
         flow {
             val response = client.get("tags")
             val models = response.body<OllamaModelsList>()

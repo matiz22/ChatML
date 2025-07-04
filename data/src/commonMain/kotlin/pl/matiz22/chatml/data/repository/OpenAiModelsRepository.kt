@@ -18,7 +18,7 @@ class OpenAiModelsRepository(
             openAiHttpClientConfig(apiKey),
         ),
 ) : ModelsRepository {
-    override suspend fun geAvailableModels(): Flow<List<Model>> =
+    override suspend fun getAvailableModels(): Flow<List<Model>> =
         flow {
             val response = client.get("models")
             val models = response.body<OpenAiModelList>()

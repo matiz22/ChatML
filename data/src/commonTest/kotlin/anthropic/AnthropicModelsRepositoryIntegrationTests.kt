@@ -23,7 +23,7 @@ class AnthropicModelsRepositoryIntegrationTests {
         runTest {
             println("Running testGetAvailableModels")
             // When
-            val modelsFlow = repository.geAvailableModels()
+            val modelsFlow = repository.getAvailableModels()
             val models = modelsFlow.first()
 
             // Then

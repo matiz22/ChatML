@@ -1,21 +1,12 @@
 package pl.matiz22.chatml.data.repository
 
 import com.xemantic.ai.tool.schema.generator.generateSchema
-import io.ktor.client.HttpClientConfig
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.sse.SSE
 import io.ktor.client.plugins.sse.sseSession
-import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
-import io.ktor.http.URLProtocol
-import io.ktor.http.contentType
-import io.ktor.http.path
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -27,6 +18,7 @@ import pl.matiz22.chatml.data.models.anthropic.AnthropicResponse
 import pl.matiz22.chatml.data.models.anthropic.AnthropicStartStreamData
 import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
 import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
+import pl.matiz22.chatml.data.source.anthropicHttpClientConfig
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.wrappers.extractSystemMessage
 import pl.matiz22.chatml.data.wrappers.prepareRequestBodyAnthropic
@@ -39,9 +31,11 @@ import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class AnthropicRepository(
     private val apiKey: String,
+    private val httpClient: HttpClient =
+        httpClient(
+            anthropicHttpClientConfig(apiKey),
+        ),
 ) : ChatRepository {
-    private val httpClient = httpClient(anthropicHttpClientConfig(apiKey))
-
     override suspend fun chat(
         model: String,
         messages: List<Message>,
@@ -146,37 +140,4 @@ class AnthropicRepository(
             val chatResponse = response.body<AnthropicResponse>().toDomain(serializer)
             emit(chatResponse)
         }
-
-    companion object {
-        private fun anthropicHttpClientConfig(apiKey: String): HttpClientConfig<*>.() -> Unit =
-            {
-                install(ContentNegotiation) {
-                    json(
-                        Json {
-                            prettyPrint = true
-                            isLenient = true
-                            ignoreUnknownKeys = true
-                        },
-                    )
-                }
-
-                install(HttpTimeout) {
-                    requestTimeoutMillis = 1_000_000L
-                    socketTimeoutMillis = 1_000_000L
-                }
-
-                install(SSE)
-
-                defaultRequest {
-                    contentType(io.ktor.http.ContentType.Application.Json)
-                    url {
-                        protocol = URLProtocol.HTTPS
-                        host = "api.anthropic.com"
-                        path("/v1/")
-                    }
-                    header("x-api-key", apiKey)
-                    header("anthropic-version", "2023-06-01")
-                }
-            }
-    }
 }

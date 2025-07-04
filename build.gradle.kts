@@ -6,5 +6,5 @@ plugins {
 
 allprojects {
     group = "pl.matiz22.chatml"
-    version = "0.0.5"
+    version = "0.0.6"
 }

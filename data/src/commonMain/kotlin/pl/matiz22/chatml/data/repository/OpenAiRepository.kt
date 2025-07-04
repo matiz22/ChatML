@@ -1,21 +1,12 @@
 package pl.matiz22.chatml.data.repository
 
 import com.xemantic.ai.tool.schema.generator.generateSchema
-import io.ktor.client.HttpClientConfig
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.sse.SSE
 import io.ktor.client.plugins.sse.sseSession
-import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
-import io.ktor.http.URLProtocol
-import io.ktor.http.contentType
-import io.ktor.http.path
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.KSerializer
@@ -25,6 +16,7 @@ import kotlinx.serialization.json.buildJsonObject
 import pl.matiz22.chatml.data.models.openai.OpenAiResponse
 import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
 import pl.matiz22.chatml.data.source.httpClient
+import pl.matiz22.chatml.data.source.openAiHttpClientConfig
 import pl.matiz22.chatml.data.wrappers.prepareRequestBodyOpenAi
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
@@ -34,9 +26,11 @@ import pl.matiz22.chatml.domain.repository.ChatRepository
 
 class OpenAiRepository(
     private val apiKey: String,
+    private val client: HttpClient =
+        httpClient(
+            openAiHttpClientConfig(apiKey),
+        ),
 ) : ChatRepository {
-    private val client = httpClient(openAiHttpClientConfig(apiKey))
-
     override suspend fun chat(
         model: String,
         messages: List<Message>,
@@ -112,32 +106,4 @@ class OpenAiRepository(
                 openAiResponse.toMessages(serializer)
             emit(responseChoices)
         }
-
-    companion object {
-        private fun openAiHttpClientConfig(apiKey: String): HttpClientConfig<*>.() -> Unit =
-            {
-                install(ContentNegotiation) {
-                    json(
-                        Json {
-                            prettyPrint = true
-                            isLenient = true
-                            ignoreUnknownKeys = true
-                        },
-                    )
-                }
-                install(HttpTimeout) {
-                    requestTimeoutMillis = 30000
-                }
-                install(SSE)
-                defaultRequest {
-                    contentType(io.ktor.http.ContentType.Application.Json)
-                    url {
-                        protocol = URLProtocol.HTTPS
-                        host = "api.openai.com"
-                        path("/v1/")
-                    }
-                    header("Authorization", "Bearer $apiKey")
-                }
-            }
-    }
 }

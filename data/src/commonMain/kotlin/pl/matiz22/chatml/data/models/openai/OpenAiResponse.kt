@@ -9,6 +9,9 @@ import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.Role
 import pl.matiz22.chatml.domain.models.Tokens
+import pl.matiz22.chatml.domain.models.TypedChatResponse
+import pl.matiz22.chatml.domain.models.TypedContent
+import pl.matiz22.chatml.domain.models.TypedMessage
 
 @Serializable
 internal data class OpenAiResponse(
@@ -42,25 +45,25 @@ internal data class OpenAiResponse(
             )
         }
 
-    fun <T> toMessages(serializer: KSerializer<T>): ChatResponse =
-        ChatResponse(
+    fun <T> toMessages(serializer: KSerializer<T>): TypedChatResponse<T> =
+        TypedChatResponse(
             id = id,
             response = this.choices.toMessages(serializer),
             tokens = Tokens(input = usage.promptTokens, output = usage.completionTokens),
         )
 
-    fun <T> List<OpenAiChoice>.toMessages(serializer: KSerializer<T>): List<Message> =
+    fun <T> List<OpenAiChoice>.toMessages(serializer: KSerializer<T>): List<TypedMessage<T>> =
         this.map { choice ->
             try {
                 val content = Json.decodeFromString(serializer, choice.responseMessage.content)
-                Message(
+                TypedMessage(
                     role = Role.valueOf(choice.responseMessage.role.uppercase()),
-                    content = Content.Tool(value = content),
+                    content = TypedContent.Tool(value = content),
                 )
             } catch (e: Exception) {
-                Message(
+                TypedMessage(
                     role = Role.valueOf(choice.responseMessage.role.uppercase()),
-                    content = Content.Text(text = choice.responseMessage.content),
+                    content = TypedContent.Text(text = choice.responseMessage.content),
                 )
             }
         }

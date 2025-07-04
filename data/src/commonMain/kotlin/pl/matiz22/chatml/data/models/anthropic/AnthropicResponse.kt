@@ -4,6 +4,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import pl.matiz22.chatml.domain.models.ChatResponse
+import pl.matiz22.chatml.domain.models.TypedChatResponse
 
 @Serializable
 internal data class AnthropicResponse(
@@ -26,8 +27,8 @@ internal data class AnthropicResponse(
             tokens = usage.toDomain(),
         )
 
-    fun <T> toDomain(serializer: KSerializer<T>): ChatResponse =
-        ChatResponse(
+    fun <T> toDomain(serializer: KSerializer<T>): TypedChatResponse<T> =
+        TypedChatResponse(
             id = this.id,
             response =
                 this.content.map { anthropicContent ->

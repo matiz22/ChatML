@@ -10,8 +10,4 @@ sealed class Content {
         val url: String,
         val type: ContentType = ContentType.IMAGE_URL,
     ) : Content()
-
-    data class Tool<T>(
-        val value: T,
-    ) : Content()
 }

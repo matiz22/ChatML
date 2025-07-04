@@ -5,6 +5,7 @@ import kotlinx.serialization.KSerializer
 import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
+import pl.matiz22.chatml.domain.models.TypedChatResponse
 
 interface ChatRepository {
     suspend fun chat(
@@ -18,5 +19,5 @@ interface ChatRepository {
         messages: List<Message>,
         options: CompletionOptions,
         serializer: KSerializer<T>,
-    ): Flow<ChatResponse>
+    ): Flow<TypedChatResponse<T>>
 }

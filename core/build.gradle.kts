@@ -19,6 +19,12 @@ kotlin {
         }
     }
 
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        nodejs()
+        binaries.executable()
+    }
+
     listOf(
         iosX64(),
         iosArm64(),

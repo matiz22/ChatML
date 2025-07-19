@@ -4,10 +4,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.isSuccess
 import io.ktor.utils.io.core.toByteArray
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import pl.matiz22.chatml.data.source.httpClient
+import pl.matiz22.chatml.data.util.IODispatcher
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -111,7 +110,7 @@ internal class ImageProcessor {
      */
     @OptIn(ExperimentalEncodingApi::class)
     suspend fun downloadImageAndConvertToBase64(urlString: String): String? =
-        withContext(Dispatchers.IO) {
+        withContext(IODispatcher) {
             try {
                 val response = client.get(urlString)
 

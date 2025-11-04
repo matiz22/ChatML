@@ -3,7 +3,7 @@ package openai
 import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import pl.matiz22.chatml.data.repository.OpenAiModelsRepository
+import pl.matiz22.chatml.data.repository.models.OpenAiModelsRepository
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull

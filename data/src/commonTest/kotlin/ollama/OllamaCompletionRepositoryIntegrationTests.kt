@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class OllamaRepositoryIntegrationTests {
+class OllamaCompletionRepositoryIntegrationTests {
     private lateinit var repository: OllamaCompletionRepository
 
     @BeforeTest

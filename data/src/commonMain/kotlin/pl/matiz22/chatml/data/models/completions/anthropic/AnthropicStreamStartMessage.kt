@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic
+package pl.matiz22.chatml.data.models.completions.anthropic
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -9,10 +9,10 @@ internal data class AnthropicStreamStartMessage(
     val type: String,
     val role: String,
     val model: String,
-    val content: List<AnthropicContent>,
+    val content: List<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContent>,
     @SerialName("stop_reason")
     val stopReason: String?,
     @SerialName("stop_sequence")
     val stopSequence: String?,
-    val usage: AnthropicUsage,
+    val usage: pl.matiz22.chatml.data.models.completions.anthropic.AnthropicUsage,
 )

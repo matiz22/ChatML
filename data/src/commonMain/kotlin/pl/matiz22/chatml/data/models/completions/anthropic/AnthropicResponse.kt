@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic
+package pl.matiz22.chatml.data.models.completions.anthropic
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -14,8 +14,8 @@ internal data class AnthropicResponse(
     @SerialName("stop_reason") val stopReason: String?,
     @SerialName("stop_sequence") val stopSequence: String?,
     val type: String = "message",
-    val content: List<AnthropicContent>,
-    val usage: AnthropicUsage,
+    val content: List<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContent>,
+    val usage: pl.matiz22.chatml.data.models.completions.anthropic.AnthropicUsage,
 ) {
     fun toDomain(): ChatResponse =
         ChatResponse(

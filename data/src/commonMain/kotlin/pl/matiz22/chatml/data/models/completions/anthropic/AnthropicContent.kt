@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic
+package pl.matiz22.chatml.data.models.completions.anthropic
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -23,7 +23,7 @@ internal sealed class AnthropicContent {
     @SerialName("image")
     @Serializable
     data class Image(
-        val source: AnthropicImageSource,
+        val source: pl.matiz22.chatml.data.models.completions.anthropic.AnthropicImageSource,
     ) : AnthropicContent()
 
     @SerialName("tool_use")

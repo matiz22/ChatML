@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic
+package pl.matiz22.chatml.data.models.completions.anthropic
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,7 +15,7 @@ internal data class AnthropicUsage(
     @SerialName("cache_read_input_tokens")
     val cacheReadInputTokens: Int = 0,
     @SerialName("cache_creation")
-    val cacheCreation: CacheCreation? = null,
+    val cacheCreation: pl.matiz22.chatml.data.models.completions.anthropic.CacheCreation? = null,
     @SerialName("service_tier")
     val serviceTier: String? = null,
 ) {

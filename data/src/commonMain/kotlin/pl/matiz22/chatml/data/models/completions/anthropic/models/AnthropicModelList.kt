@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic.models
+package pl.matiz22.chatml.data.models.completions.anthropic.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,7 +7,7 @@ import pl.matiz22.chatml.domain.models.Model
 @Serializable
 data class AnthropicModelList(
     @SerialName("data")
-    val data: List<AnthropicModelData>,
+    val data: List<pl.matiz22.chatml.data.models.completions.anthropic.models.AnthropicModelData>,
     @SerialName("first_id")
     val firstId: String,
     @SerialName("has_more")

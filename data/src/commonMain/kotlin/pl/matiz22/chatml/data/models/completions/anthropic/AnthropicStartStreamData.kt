@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic
+package pl.matiz22.chatml.data.models.completions.anthropic
 
 import kotlinx.serialization.Serializable
 import pl.matiz22.chatml.domain.models.ChatResponse
@@ -9,7 +9,7 @@ import pl.matiz22.chatml.domain.models.Role
 @Serializable
 internal data class AnthropicStartStreamData(
     val type: String,
-    val message: AnthropicStreamStartMessage,
+    val message: pl.matiz22.chatml.data.models.completions.anthropic.AnthropicStreamStartMessage,
 ) {
     fun toDomain(): ChatResponse =
         ChatResponse(

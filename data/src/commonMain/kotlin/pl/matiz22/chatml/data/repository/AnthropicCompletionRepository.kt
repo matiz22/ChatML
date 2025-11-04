@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
-import pl.matiz22.chatml.data.models.anthropic.AnthropicContentBlockStream
-import pl.matiz22.chatml.data.models.anthropic.AnthropicMessageDelta
-import pl.matiz22.chatml.data.models.anthropic.AnthropicResponse
-import pl.matiz22.chatml.data.models.anthropic.AnthropicStartStreamData
-import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
-import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContentBlockStream
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessageDelta
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicResponse
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicStartStreamData
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicTool
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicToolChoice
 import pl.matiz22.chatml.data.source.anthropicHttpClientConfig
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.wrappers.extractSystemMessage
@@ -56,7 +56,7 @@ class AnthropicCompletionRepository(
                     when (event.event) {
                         "message_start" -> {
                             val messageStart =
-                                Json.decodeFromString<AnthropicStartStreamData>(
+                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicStartStreamData>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(messageStart.toDomain())
@@ -64,7 +64,7 @@ class AnthropicCompletionRepository(
 
                         "content_block_start" -> {
                             val blockStart =
-                                Json.decodeFromString<AnthropicContentBlockStream>(
+                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContentBlockStream>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(blockStart.toDomain())
@@ -72,7 +72,7 @@ class AnthropicCompletionRepository(
 
                         "content_block_delta" -> {
                             val blockDelta =
-                                Json.decodeFromString<AnthropicContentBlockStream>(
+                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContentBlockStream>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(blockDelta.toDomain())
@@ -80,7 +80,7 @@ class AnthropicCompletionRepository(
 
                         "message_delta" -> {
                             val messageDelta =
-                                Json.decodeFromString<AnthropicMessageDelta>(
+                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessageDelta>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(messageDelta.toDomain())
@@ -92,7 +92,7 @@ class AnthropicCompletionRepository(
                     httpClient.post("messages") {
                         setBody(body)
                     }
-                emit(response.body<AnthropicResponse>().toDomain())
+                emit(response.body<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicResponse>().toDomain())
             }
         }.catch { exception ->
             throw ChatMLException(
@@ -117,7 +117,7 @@ class AnthropicCompletionRepository(
             val system = messages.extractSystemMessage()
             val name = "tool"
             val anthropicTool =
-                AnthropicTool(
+                _root_ide_package_.pl.matiz22.chatml.data.models.completions.anthropic.AnthropicTool(
                     name = name,
                     description = name,
                     inputSchema = parsed,
@@ -130,14 +130,14 @@ class AnthropicCompletionRepository(
                     system,
                     options,
                     listOf(anthropicTool),
-                    AnthropicToolChoice.SpecificTool(name),
+                    _root_ide_package_.pl.matiz22.chatml.data.models.completions.anthropic.AnthropicToolChoice.SpecificTool(name),
                 )
 
             val response =
                 httpClient.post("messages") {
                     setBody(body)
                 }
-            val chatResponse = response.body<AnthropicResponse>().toDomain(serializer)
+            val chatResponse = response.body<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicResponse>().toDomain(serializer)
             emit(chatResponse)
         }
 }

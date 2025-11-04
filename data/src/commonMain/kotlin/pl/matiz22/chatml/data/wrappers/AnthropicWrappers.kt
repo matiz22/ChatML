@@ -1,11 +1,11 @@
 package pl.matiz22.chatml.data.wrappers
 
-import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
-import pl.matiz22.chatml.data.models.anthropic.AnthropicImageSource
-import pl.matiz22.chatml.data.models.anthropic.AnthropicMessage
-import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
-import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
-import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContent
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicImageSource
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessage
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicRequest
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicTool
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicToolChoice
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
@@ -27,18 +27,18 @@ internal fun List<Message>.extractSystemMessage(): String =
             }
         }
 
-internal fun List<Message>.toAnthropic(): List<AnthropicMessage> =
+internal fun List<Message>.toAnthropic(): List<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessage> =
     this
         .filter { message: Message ->
             message.role != Role.SYSTEM
         }.map { message: Message ->
-            AnthropicMessage(
+            _root_ide_package_.pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessage(
                 role = message.role.value,
                 content = listOf(message.content.toAnthropic()),
             )
         }
 
-internal fun Content.toAnthropic(): AnthropicContent =
+internal fun Content.toAnthropic(): pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContent =
     when (this) {
         is Content.Image -> {
             val base64Prefix = "data:"

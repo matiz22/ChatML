@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import pl.matiz22.chatml.data.models.anthropic.models.AnthropicModelList
+import pl.matiz22.chatml.data.models.completions.anthropic.models.AnthropicModelList
 import pl.matiz22.chatml.data.source.anthropicHttpClientConfig
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.domain.models.Model
@@ -21,7 +21,7 @@ class AnthropicModelsRepository(
     override suspend fun getAvailableModels(): Flow<List<Model>> =
         flow {
             val response = httpClient.get("models")
-            val models = response.body<AnthropicModelList>()
+            val models = response.body<pl.matiz22.chatml.data.models.completions.anthropic.models.AnthropicModelList>()
 
             emit(models.toModels())
         }

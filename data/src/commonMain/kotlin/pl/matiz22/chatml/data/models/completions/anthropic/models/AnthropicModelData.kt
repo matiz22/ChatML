@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic.models
+package pl.matiz22.chatml.data.models.completions.anthropic.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

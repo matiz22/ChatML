@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.anthropic
+package pl.matiz22.chatml.data.models.completions.anthropic
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -15,7 +15,7 @@ internal data class AnthropicContentBlockStream
         val type: String,
         val index: Int,
         @JsonNames("content_block", "delta")
-        val contentBlock: AnthropicTextDelta,
+        val contentBlock: pl.matiz22.chatml.data.models.completions.anthropic.AnthropicTextDelta,
     ) {
         fun toDomain(): ChatResponse =
             ChatResponse(

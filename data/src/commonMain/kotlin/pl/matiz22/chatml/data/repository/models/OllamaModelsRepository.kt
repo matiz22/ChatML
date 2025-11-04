@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.repository
+package pl.matiz22.chatml.data.repository.models
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

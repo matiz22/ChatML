@@ -27,18 +27,18 @@ internal fun List<Message>.extractSystemMessage(): String =
             }
         }
 
-internal fun List<Message>.toAnthropic(): List<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessage> =
+internal fun List<Message>.toAnthropic(): List<AnthropicMessage> =
     this
         .filter { message: Message ->
             message.role != Role.SYSTEM
         }.map { message: Message ->
-            _root_ide_package_.pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessage(
+            AnthropicMessage(
                 role = message.role.value,
                 content = listOf(message.content.toAnthropic()),
             )
         }
 
-internal fun Content.toAnthropic(): pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContent =
+internal fun Content.toAnthropic(): AnthropicContent =
     when (this) {
         is Content.Image -> {
             val base64Prefix = "data:"

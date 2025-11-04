@@ -2,7 +2,7 @@ package ollama
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import pl.matiz22.chatml.data.repository.OllamaModelsRepository
+import pl.matiz22.chatml.data.repository.models.OllamaModelsRepository
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull

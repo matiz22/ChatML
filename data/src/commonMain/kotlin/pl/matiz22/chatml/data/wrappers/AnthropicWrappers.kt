@@ -1,11 +1,11 @@
 package pl.matiz22.chatml.data.wrappers
 
-import pl.matiz22.chatml.data.models.anthropic.AnthropicContent
-import pl.matiz22.chatml.data.models.anthropic.AnthropicImageSource
-import pl.matiz22.chatml.data.models.anthropic.AnthropicMessage
-import pl.matiz22.chatml.data.models.anthropic.AnthropicRequest
-import pl.matiz22.chatml.data.models.anthropic.AnthropicTool
-import pl.matiz22.chatml.data.models.anthropic.AnthropicToolChoice
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContent
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicImageSource
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessage
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicRequest
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicTool
+import pl.matiz22.chatml.data.models.completions.anthropic.AnthropicToolChoice
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message

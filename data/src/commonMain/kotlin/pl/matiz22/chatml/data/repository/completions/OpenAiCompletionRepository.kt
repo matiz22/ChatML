@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.repository
+package pl.matiz22.chatml.data.repository.completions
 
 import com.xemantic.ai.tool.schema.generator.generateSchema
 import io.ktor.client.HttpClient
@@ -52,7 +52,7 @@ class OpenAiCompletionRepository(
                     }
 
                     val streamResponse =
-                        Json.decodeFromString<pl.matiz22.chatml.data.models.completions.openai.OpenAiStreamResponse>(
+                        Json.decodeFromString<OpenAiStreamResponse>(
                             event.data ?: throw Exception("Error while handling stream: null data"),
                         )
                     val chatResponse = streamResponse.toMessages()
@@ -63,7 +63,7 @@ class OpenAiCompletionRepository(
                     client.post("chat/completions") {
                         setBody(requestBody)
                     }
-                val openAiResponse: pl.matiz22.chatml.data.models.completions.openai.OpenAiResponse = response.body()
+                val openAiResponse: OpenAiResponse = response.body()
                 emit(openAiResponse.toMessages())
             }
         }
@@ -101,7 +101,7 @@ class OpenAiCompletionRepository(
                 client.post("chat/completions") {
                     setBody(body)
                 }
-            val openAiResponse: pl.matiz22.chatml.data.models.completions.openai.OpenAiResponse = response.body()
+            val openAiResponse: OpenAiResponse = response.body()
             val responseChoices =
                 openAiResponse.toMessages(serializer)
             emit(responseChoices)

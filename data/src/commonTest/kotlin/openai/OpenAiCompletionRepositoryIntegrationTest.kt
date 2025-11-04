@@ -4,7 +4,7 @@ import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import models.Address
-import pl.matiz22.chatml.data.repository.OpenAiCompletionRepository
+import pl.matiz22.chatml.data.repository.completions.OpenAiCompletionRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message

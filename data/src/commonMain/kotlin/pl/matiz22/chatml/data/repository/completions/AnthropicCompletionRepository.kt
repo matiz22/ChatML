@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.repository
+package pl.matiz22.chatml.data.repository.completions
 
 import com.xemantic.ai.tool.schema.generator.generateSchema
 import io.ktor.client.HttpClient
@@ -56,7 +56,7 @@ class AnthropicCompletionRepository(
                     when (event.event) {
                         "message_start" -> {
                             val messageStart =
-                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicStartStreamData>(
+                                Json.decodeFromString<AnthropicStartStreamData>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(messageStart.toDomain())
@@ -64,7 +64,7 @@ class AnthropicCompletionRepository(
 
                         "content_block_start" -> {
                             val blockStart =
-                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContentBlockStream>(
+                                Json.decodeFromString<AnthropicContentBlockStream>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(blockStart.toDomain())
@@ -72,7 +72,7 @@ class AnthropicCompletionRepository(
 
                         "content_block_delta" -> {
                             val blockDelta =
-                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicContentBlockStream>(
+                                Json.decodeFromString<AnthropicContentBlockStream>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(blockDelta.toDomain())
@@ -80,7 +80,7 @@ class AnthropicCompletionRepository(
 
                         "message_delta" -> {
                             val messageDelta =
-                                Json.decodeFromString<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicMessageDelta>(
+                                Json.decodeFromString<AnthropicMessageDelta>(
                                     event.data ?: throw Exception("Missing event data"),
                                 )
                             emit(messageDelta.toDomain())
@@ -92,7 +92,7 @@ class AnthropicCompletionRepository(
                     httpClient.post("messages") {
                         setBody(body)
                     }
-                emit(response.body<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicResponse>().toDomain())
+                emit(response.body<AnthropicResponse>().toDomain())
             }
         }.catch { exception ->
             throw ChatMLException(
@@ -117,7 +117,7 @@ class AnthropicCompletionRepository(
             val system = messages.extractSystemMessage()
             val name = "tool"
             val anthropicTool =
-                _root_ide_package_.pl.matiz22.chatml.data.models.completions.anthropic.AnthropicTool(
+                AnthropicTool(
                     name = name,
                     description = name,
                     inputSchema = parsed,
@@ -130,14 +130,14 @@ class AnthropicCompletionRepository(
                     system,
                     options,
                     listOf(anthropicTool),
-                    _root_ide_package_.pl.matiz22.chatml.data.models.completions.anthropic.AnthropicToolChoice.SpecificTool(name),
+                    AnthropicToolChoice.SpecificTool(name),
                 )
 
             val response =
                 httpClient.post("messages") {
                     setBody(body)
                 }
-            val chatResponse = response.body<pl.matiz22.chatml.data.models.completions.anthropic.AnthropicResponse>().toDomain(serializer)
+            val chatResponse = response.body<AnthropicResponse>().toDomain(serializer)
             emit(chatResponse)
         }
 }

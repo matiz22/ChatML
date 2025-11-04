@@ -3,7 +3,7 @@ package ollama
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import models.Address
-import pl.matiz22.chatml.data.repository.OllamaCompletionRepository
+import pl.matiz22.chatml.data.repository.completions.OllamaCompletionRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message

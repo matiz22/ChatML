@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.repository
+package pl.matiz22.chatml.data.repository.completions
 
 import com.xemantic.ai.tool.schema.generator.generateSchema
 import io.ktor.client.HttpClient

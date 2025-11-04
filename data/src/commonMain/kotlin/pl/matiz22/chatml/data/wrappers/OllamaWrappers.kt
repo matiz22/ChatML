@@ -1,8 +1,8 @@
 package pl.matiz22.chatml.data.wrappers
 
-import pl.matiz22.chatml.data.models.ollama.OllamaMessage
-import pl.matiz22.chatml.data.models.ollama.OllamaOptions
-import pl.matiz22.chatml.data.models.ollama.OllamaRequest
+import pl.matiz22.chatml.data.models.completions.ollama.OllamaMessage
+import pl.matiz22.chatml.data.models.completions.ollama.OllamaOptions
+import pl.matiz22.chatml.data.models.completions.ollama.OllamaRequest
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.ContentType

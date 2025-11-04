@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import pl.matiz22.chatml.data.models.ollama.models.OllamaModelsList
+import pl.matiz22.chatml.data.models.completions.ollama.models.OllamaModelsList
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.source.ollamaHttpClientConfig
 import pl.matiz22.chatml.domain.models.Model

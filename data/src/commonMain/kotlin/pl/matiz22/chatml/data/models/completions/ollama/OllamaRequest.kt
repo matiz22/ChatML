@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.ollama
+package pl.matiz22.chatml.data.models.completions.ollama
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

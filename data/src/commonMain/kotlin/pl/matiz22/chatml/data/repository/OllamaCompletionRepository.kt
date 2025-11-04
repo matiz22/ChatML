@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
-import pl.matiz22.chatml.data.models.ollama.OllamaResponse
+import pl.matiz22.chatml.data.models.completions.ollama.OllamaResponse
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.source.ollamaHttpClientConfig
 import pl.matiz22.chatml.data.util.sanitizeJsonSchema

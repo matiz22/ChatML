@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import pl.matiz22.chatml.data.models.openai.models.OpenAiModelList
+import pl.matiz22.chatml.data.models.completions.openai.models.OpenAiModelList
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.source.openAiHttpClientConfig
 import pl.matiz22.chatml.domain.models.Model
@@ -21,7 +21,7 @@ class OpenAiModelsRepository(
     override suspend fun getAvailableModels(): Flow<List<Model>> =
         flow {
             val response = client.get("models")
-            val models = response.body<OpenAiModelList>()
+            val models = response.body<pl.matiz22.chatml.data.models.completions.openai.models.OpenAiModelList>()
 
             emit(models.toModels())
         }

@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai
+package pl.matiz22.chatml.data.models.completions.openai
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -16,7 +16,7 @@ import pl.matiz22.chatml.domain.models.TypedMessage
 @Serializable
 internal data class OpenAiResponse(
     @SerialName("choices")
-    val choices: List<OpenAiChoice>,
+    val choices: List<pl.matiz22.chatml.data.models.completions.openai.OpenAiChoice>,
     @SerialName("created")
     val created: Int,
     @SerialName("id")
@@ -28,7 +28,7 @@ internal data class OpenAiResponse(
     @SerialName("system_fingerprint")
     val systemFingerprint: String?,
     @SerialName("usage")
-    val usage: OpenAiUsage,
+    val usage: pl.matiz22.chatml.data.models.completions.openai.OpenAiUsage,
 ) {
     fun toMessages(): ChatResponse =
         ChatResponse(
@@ -37,7 +37,7 @@ internal data class OpenAiResponse(
             tokens = Tokens(input = usage.promptTokens, output = usage.completionTokens),
         )
 
-    private fun List<OpenAiChoice>.toMessages(): List<Message> =
+    private fun List<pl.matiz22.chatml.data.models.completions.openai.OpenAiChoice>.toMessages(): List<Message> =
         this.map { choice ->
             Message(
                 role = Role.valueOf(choice.responseMessage.role.uppercase()),
@@ -52,7 +52,7 @@ internal data class OpenAiResponse(
             tokens = Tokens(input = usage.promptTokens, output = usage.completionTokens),
         )
 
-    fun <T> List<OpenAiChoice>.toMessages(serializer: KSerializer<T>): List<TypedMessage<T>> =
+    fun <T> List<pl.matiz22.chatml.data.models.completions.openai.OpenAiChoice>.toMessages(serializer: KSerializer<T>): List<TypedMessage<T>> =
         this.map { choice ->
             try {
                 val content = Json.decodeFromString(serializer, choice.responseMessage.content)

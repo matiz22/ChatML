@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai
+package pl.matiz22.chatml.data.models.completions.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class OpenAiRequestMessage(
     @SerialName("content")
-    val content: List<OpenAiRequestContent>,
+    val content: List<pl.matiz22.chatml.data.models.completions.openai.OpenAiRequestContent>,
     @SerialName("role")
     val role: String,
 )

@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai
+package pl.matiz22.chatml.data.models.completions.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,7 +10,7 @@ internal data class OpenAiChoice(
     @SerialName("index")
     val index: Int,
     @SerialName("logprobs")
-    val logprobs: OpenAiLogprobs?,
+    val logprobs: pl.matiz22.chatml.data.models.completions.openai.OpenAiLogprobs?,
     @SerialName("message")
-    val responseMessage: OpenAiResponseMessage,
+    val responseMessage: pl.matiz22.chatml.data.models.completions.openai.OpenAiResponseMessage,
 )

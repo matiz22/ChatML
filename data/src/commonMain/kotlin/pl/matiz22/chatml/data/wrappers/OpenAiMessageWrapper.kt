@@ -1,16 +1,16 @@
 package pl.matiz22.chatml.data.wrappers
 
 import kotlinx.serialization.json.JsonElement
-import pl.matiz22.chatml.data.models.openai.OpenAiImageUrl
-import pl.matiz22.chatml.data.models.openai.OpenAiRequest
-import pl.matiz22.chatml.data.models.openai.OpenAiRequestContent
-import pl.matiz22.chatml.data.models.openai.OpenAiRequestMessage
+import pl.matiz22.chatml.data.models.completions.openai.OpenAiImageUrl
+import pl.matiz22.chatml.data.models.completions.openai.OpenAiRequest
+import pl.matiz22.chatml.data.models.completions.openai.OpenAiRequestContent
+import pl.matiz22.chatml.data.models.completions.openai.OpenAiRequestMessage
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.ContentType
 import pl.matiz22.chatml.domain.models.Message
 
-internal fun Message.toOpenAiRequestMessage(): OpenAiRequestMessage =
+internal fun Message.toOpenAiRequestMessage(): pl.matiz22.chatml.data.models.completions.openai.OpenAiRequestMessage =
     OpenAiRequestMessage(
         content =
             listOf(

@@ -13,8 +13,8 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
-import pl.matiz22.chatml.data.models.openai.OpenAiResponse
-import pl.matiz22.chatml.data.models.openai.OpenAiStreamResponse
+import pl.matiz22.chatml.data.models.completions.openai.OpenAiResponse
+import pl.matiz22.chatml.data.models.completions.openai.OpenAiStreamResponse
 import pl.matiz22.chatml.data.source.httpClient
 import pl.matiz22.chatml.data.source.openAiHttpClientConfig
 import pl.matiz22.chatml.data.wrappers.prepareRequestBodyOpenAi
@@ -52,7 +52,7 @@ class OpenAiCompletionRepository(
                     }
 
                     val streamResponse =
-                        Json.decodeFromString<OpenAiStreamResponse>(
+                        Json.decodeFromString<pl.matiz22.chatml.data.models.completions.openai.OpenAiStreamResponse>(
                             event.data ?: throw Exception("Error while handling stream: null data"),
                         )
                     val chatResponse = streamResponse.toMessages()
@@ -63,7 +63,7 @@ class OpenAiCompletionRepository(
                     client.post("chat/completions") {
                         setBody(requestBody)
                     }
-                val openAiResponse: OpenAiResponse = response.body()
+                val openAiResponse: pl.matiz22.chatml.data.models.completions.openai.OpenAiResponse = response.body()
                 emit(openAiResponse.toMessages())
             }
         }
@@ -101,7 +101,7 @@ class OpenAiCompletionRepository(
                 client.post("chat/completions") {
                     setBody(body)
                 }
-            val openAiResponse: OpenAiResponse = response.body()
+            val openAiResponse: pl.matiz22.chatml.data.models.completions.openai.OpenAiResponse = response.body()
             val responseChoices =
                 openAiResponse.toMessages(serializer)
             emit(responseChoices)

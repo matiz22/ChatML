@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai.models
+package pl.matiz22.chatml.data.models.completions.openai.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,7 +7,7 @@ import pl.matiz22.chatml.domain.models.Model
 @Serializable
 data class OpenAiModelList(
     @SerialName("data")
-    val data: List<OpenAiModelData>,
+    val data: List<pl.matiz22.chatml.data.models.completions.openai.models.OpenAiModelData>,
     @SerialName("object")
     val objectX: String,
 ) {

@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai
+package pl.matiz22.chatml.data.models.completions.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,7 +12,7 @@ import kotlin.jvm.JvmName
 @Serializable
 internal data class OpenAiStreamResponse(
     @SerialName("choices")
-    val choices: List<OpenAiStreamChoice>,
+    val choices: List<pl.matiz22.chatml.data.models.completions.openai.OpenAiStreamChoice>,
     @SerialName("created")
     val created: Int,
     @SerialName("id")
@@ -26,7 +26,7 @@ internal data class OpenAiStreamResponse(
     @SerialName("system_fingerprint")
     val systemFingerprint: String?,
     @SerialName("usage")
-    val usage: OpenAiUsage? = null,
+    val usage: pl.matiz22.chatml.data.models.completions.openai.OpenAiUsage? = null,
     @SerialName("obfuscation")
     val obfuscation: String? = null,
 ) {
@@ -41,7 +41,7 @@ internal data class OpenAiStreamResponse(
         )
 
     @JvmName("toMessagesFromStreamChoices")
-    private fun List<OpenAiStreamChoice>.toMessages(): List<Message> =
+    private fun List<pl.matiz22.chatml.data.models.completions.openai.OpenAiStreamChoice>.toMessages(): List<Message> =
         this.map { streamChoice ->
             Message(
                 role = Role.ASSISTANT,

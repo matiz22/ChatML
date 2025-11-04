@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai
+package pl.matiz22.chatml.data.models.completions.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

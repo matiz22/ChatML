@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.models.openai
+package pl.matiz22.chatml.data.models.completions.openai
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,7 +7,7 @@ import kotlinx.serialization.json.JsonElement
 @Serializable
 internal data class OpenAiRequest(
     @SerialName("messages")
-    val messages: List<OpenAiRequestMessage>,
+    val messages: List<pl.matiz22.chatml.data.models.completions.openai.OpenAiRequestMessage>,
     @SerialName("model")
     val model: String,
     @SerialName("n")

@@ -4,7 +4,7 @@ import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import models.Address
-import pl.matiz22.chatml.data.repository.OpenAiRepository
+import pl.matiz22.chatml.data.repository.OpenAiCompletionRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
@@ -17,13 +17,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class OpenAiRepositoryIntegrationTest {
-    private lateinit var repository: OpenAiRepository
+class OpenAiCompletionRepositoryIntegrationTest {
+    private lateinit var repository: OpenAiCompletionRepository
 
     @BeforeTest
     fun setup() {
         val apiKey: String = EnvVar.require("OPENAI_API_KEY")
-        repository = OpenAiRepository(apiKey)
+        repository = OpenAiCompletionRepository(apiKey)
     }
 
     @Test

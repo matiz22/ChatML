@@ -27,6 +27,8 @@ internal data class OpenAiStreamResponse(
     val systemFingerprint: String?,
     @SerialName("usage")
     val usage: OpenAiUsage? = null,
+    @SerialName("obfuscation")
+    val obfuscation: String? = null,
 ) {
     fun toMessages(): ChatResponse =
         ChatResponse(

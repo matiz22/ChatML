@@ -5,14 +5,14 @@ import kotlinx.serialization.serializer
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.TypedChatResponse
-import pl.matiz22.chatml.domain.repository.ChatRepository
+import pl.matiz22.chatml.domain.repository.CompletionRepository
 
-suspend inline fun <reified T> ChatRepository.chat(
+suspend inline fun <reified T> CompletionRepository.completion(
     model: String,
     messages: List<Message>,
     options: CompletionOptions,
 ): Flow<TypedChatResponse<T>> =
-    chat(
+    completion(
         model = model,
         messages = messages,
         options = options,

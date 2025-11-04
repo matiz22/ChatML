@@ -20,7 +20,7 @@ import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.TypedChatResponse
-import pl.matiz22.chatml.domain.repository.ChatRepository
+import pl.matiz22.chatml.domain.repository.CompletionRepository
 
 class OllamaRepository(
     private val url: String = "http://localhost:11434/api/generate",
@@ -28,8 +28,8 @@ class OllamaRepository(
         httpClient(
             ollamaHttpClientConfig(url),
         ),
-) : ChatRepository {
-    override suspend fun chat(
+) : CompletionRepository {
+    override suspend fun completion(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -67,7 +67,7 @@ class OllamaRepository(
             }
         }
 
-    override suspend fun <T> chat(
+    override suspend fun <T> completion(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,

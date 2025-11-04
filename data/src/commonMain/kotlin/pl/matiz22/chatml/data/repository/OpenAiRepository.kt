@@ -22,7 +22,7 @@ import pl.matiz22.chatml.domain.models.ChatResponse
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.TypedChatResponse
-import pl.matiz22.chatml.domain.repository.ChatRepository
+import pl.matiz22.chatml.domain.repository.CompletionRepository
 
 class OpenAiRepository(
     private val apiKey: String,
@@ -30,8 +30,8 @@ class OpenAiRepository(
         httpClient(
             openAiHttpClientConfig(apiKey),
         ),
-) : ChatRepository {
-    override suspend fun chat(
+) : CompletionRepository {
+    override suspend fun completion(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,
@@ -68,7 +68,7 @@ class OpenAiRepository(
             }
         }
 
-    override suspend fun <T> chat(
+    override suspend fun <T> completion(
         model: String,
         messages: List<Message>,
         options: CompletionOptions,

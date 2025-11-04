@@ -1,4 +1,4 @@
-package pl.matiz22.chatml.data.repository
+package pl.matiz22.chatml.data.repository.models
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -21,7 +21,7 @@ class AnthropicModelsRepository(
     override suspend fun getAvailableModels(): Flow<List<Model>> =
         flow {
             val response = httpClient.get("models")
-            val models = response.body<pl.matiz22.chatml.data.models.completions.anthropic.models.AnthropicModelList>()
+            val models = response.body<AnthropicModelList>()
 
             emit(models.toModels())
         }

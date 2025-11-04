@@ -3,7 +3,7 @@ package anthropic
 import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import pl.matiz22.chatml.data.repository.AnthropicModelsRepository
+import pl.matiz22.chatml.data.repository.models.AnthropicModelsRepository
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull

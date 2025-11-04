@@ -29,7 +29,7 @@ import pl.matiz22.chatml.domain.models.Message
 import pl.matiz22.chatml.domain.models.TypedChatResponse
 import pl.matiz22.chatml.domain.repository.CompletionRepository
 
-class AnthropicRepository(
+class AnthropicCompletionRepository(
     private val apiKey: String,
     private val httpClient: HttpClient =
         httpClient(

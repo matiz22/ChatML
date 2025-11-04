@@ -4,7 +4,7 @@ import dev.scottpierce.envvar.EnvVar
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import models.Address
-import pl.matiz22.chatml.data.repository.AnthropicRepository
+import pl.matiz22.chatml.data.repository.AnthropicCompletionRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
@@ -18,12 +18,12 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class AnthropicRepositoryIntegrationTests {
-    private lateinit var repository: AnthropicRepository
+    private lateinit var repository: AnthropicCompletionRepository
 
     @BeforeTest
     fun setup() {
         val apiKey: String = EnvVar.require("ANTHROPIC_API_KEY")
-        repository = AnthropicRepository(apiKey)
+        repository = AnthropicCompletionRepository(apiKey)
     }
 
     @Test

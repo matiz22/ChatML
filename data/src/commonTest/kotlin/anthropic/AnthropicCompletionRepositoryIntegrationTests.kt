@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class AnthropicRepositoryIntegrationTests {
+class AnthropicCompletionRepositoryIntegrationTests {
     private lateinit var repository: AnthropicCompletionRepository
 
     @BeforeTest

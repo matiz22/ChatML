@@ -3,7 +3,7 @@ package ollama
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import models.Address
-import pl.matiz22.chatml.data.repository.OllamaRepository
+import pl.matiz22.chatml.data.repository.OllamaCompletionRepository
 import pl.matiz22.chatml.domain.models.CompletionOptions
 import pl.matiz22.chatml.domain.models.Content
 import pl.matiz22.chatml.domain.models.Message
@@ -17,11 +17,11 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class OllamaRepositoryIntegrationTests {
-    private lateinit var repository: OllamaRepository
+    private lateinit var repository: OllamaCompletionRepository
 
     @BeforeTest
     fun setup() {
-        repository = OllamaRepository("http://localhost:11434")
+        repository = OllamaCompletionRepository("http://localhost:11434")
     }
 
     @Test

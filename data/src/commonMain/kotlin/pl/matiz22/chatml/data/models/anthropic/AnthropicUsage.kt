@@ -14,6 +14,8 @@ internal data class AnthropicUsage(
     val cacheCreationInputTokens: Int = 0,
     @SerialName("cache_read_input_tokens")
     val cacheReadInputTokens: Int = 0,
+    @SerialName("cache_creation")
+    val cacheCreation: CacheCreation? = null,
     @SerialName("service_tier")
     val serviceTier: String? = null,
 ) {
@@ -23,3 +25,11 @@ internal data class AnthropicUsage(
             output = this.outputTokens + this.cacheCreationInputTokens,
         )
 }
+
+@Serializable
+internal data class CacheCreation(
+    @SerialName("ephemeral_5m_input_tokens")
+    val ephemeral5mInputTokens: Int = 0,
+    @SerialName("ephemeral_1h_input_tokens")
+    val ephemeral1hInputTokens: Int = 0,
+)
